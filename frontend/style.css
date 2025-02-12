@@ -1,0 +1,4 @@
+/* Add any custom styles here, though Tailwind will handle most */
+.group-button.active {
+    @apply bg-blue-700; /* Use Tailwind classes for active state */
+  }
