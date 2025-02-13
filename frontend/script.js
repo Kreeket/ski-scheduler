@@ -1,5 +1,10 @@
-// scripts.js (COMPLETE REVISED)
-document.addEventListener('DOMContentLoaded', () => {
+import * as api from './modules/api.js';
+import { authenticateUser } from './modules/auth.js';
+import { loadExercises, renderExerciseList, updateExerciseDropdown, addExercise, editExercise, deleteExercise, getExercises } from './modules/exercises.js';
+import { loadSchedules, loadSchedule, saveSchedule, deleteSchedule } from './modules/schedules.js';
+import { showElement, hideElement } from './modules/ui.js';
+
+document.addEventListener('DOMContentLoaded', async () => {
     // --- DOM Element References ---
     const loginButton = document.getElementById('login-button');
     const usernameInput = document.getElementById('username');
@@ -20,343 +25,236 @@ document.addEventListener('DOMContentLoaded', () => {
     const newExerciseNameInput = document.getElementById('new-exercise-name');
     const saveNewExerciseButton = document.getElementById('save-new-exercise');
     const cancelNewExerciseButton = document.getElementById('cancel-new-exercise');
-    const deleteExerciseButton = document.getElementById('delete-exercise-button')
+    const editExerciseIdInput = document.getElementById('edit-exercise-id');
+    const newExerciseDescriptionInput = document.getElementById('new-exercise-description');
+    const exerciseListContainer = document.getElementById('exercise-list-container');
+    const manageExercisesButton = document.getElementById('manage-exercises-button');
+	  const exerciseDescriptionDisplay = document.getElementById('exercise-description-display'); // Description display
 
-    // --- State Variables ---
-    let currentField = null;
-    let exercises = [];
-    let schedules = {};
-    let users = [];
-
-    // --- API Base URL ---
-    const API_BASE = 'http://localhost:3000/api'; // Base URL for your API
-
-    // --- Helper Function: Show/Hide Elements ---
-    function showElement(element) {
-        element.classList.remove('hidden');
-    }
-
-    function hideElement(element) {
-        element.classList.add('hidden');
-    }
-
-    // --- Data Loading Functions ---
-    async function loadData() {
-        try {
-            const usersResponse = await fetch(`${API_BASE}/users`);
-            users = await usersResponse.json();
-            console.log("Users loaded:", users);
-
-        } catch (error) {
-            console.error('Error loading data:', error);
-            alert('Error loading user data. Please try again later.'); // Basic error handling
-        }
-    }
-
-    async function loadExercises() {
-        try {
-            const response = await fetch(`${API_BASE}/exercises`);
-            exercises = await response.json();
-            updateExerciseDropdown(); // Update dropdown whenever exercises are loaded
-        } catch (error) {
-            console.error('Error loading exercises:', error);
-            alert('Error loading exercises. Please try again later.');
-        }
-    }
-    async function loadSchedule(groupId, date) {
-        try {
-            const response = await fetch(`${API_BASE}/schedules/${date}/${groupId}`);
-            if (response.ok) {
-                const scheduleData = await response.json();
-                // Update the UI with the schedule data
-                document.getElementById('warm-up').textContent = scheduleData['warm-up'] || '';
-                document.getElementById('exercise-1').textContent = scheduleData['exercise-1'] || '';
-                document.getElementById('exercise-2').textContent = scheduleData['exercise-2'] || '';
-                document.getElementById('exercise-3').textContent = scheduleData['exercise-3'] || '';
-                document.getElementById('main-activity').textContent = scheduleData['main-activity'] || '';
-                document.getElementById('cool-down').textContent = scheduleData['cool-down'] || '';
-                document.getElementById('leaders').textContent = (scheduleData.leaders || []).join(', '); // Display as comma-separated string
-
-            } else if (response.status === 404) {
-                // Handle 404 (schedule not found) - clear the fields
-                document.getElementById('warm-up').textContent = '';
-                document.getElementById('exercise-1').textContent = '';
-                document.getElementById('exercise-2').textContent = '';
-                document.getElementById('exercise-3').textContent = '';
-                document.getElementById('main-activity').textContent = '';
-                document.getElementById('cool-down').textContent = '';
-                document.getElementById('leaders').textContent = '';
-            }
-            else {
-                console.error('Error loading schedule:', response.status);
-                alert('Error loading schedule. Please try again later.');
-            }
-        } catch (error) {
-            console.error('Error loading schedule:', error);
-            alert('Error loading schedule. Please try again later.');
-        }
-    }
-
-        // --- Save Schedule (Update) ---
-        async function saveSchedule(date, group, scheduleData) {
-            try {
-                // Ensure leaders is an array of strings
-                if (typeof scheduleData.leaders === 'string') {
-                    scheduleData.leaders = scheduleData.leaders.split(',').map(s => s.trim()).filter(s => s !== "");
-                }
-                console.log("saveSchedule - Before fetch:", date, group, scheduleData);
-                const response = await fetch(`${API_BASE}/schedules/${date}/${group}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(scheduleData),
-                });
-                console.log("saveSchedule - After fetch:", response);
-                if (!response.ok) {
-                    // Log the full response for debugging
-                    console.error("saveSchedule - Response not OK:", await response.text());
-
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-            } catch (error) {
-                console.error('Error saving schedule:', error);
-                alert('Error saving schedule. Please try again later.'); // Basic error handling
-            }
-        }
-
-        // --- Delete Schedule ---
-        async function deleteSchedule(date, group) {
-            try {
-                const response = await fetch(`${API_BASE}/schedules/${date}/${group}`, {
-                    method: 'DELETE',
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                // Optionally, update UI to reflect deletion (e.g., clear the schedule display)
-                loadSchedule(group, date);
-
-            } catch (error) {
-                console.error('Error deleting schedule:', error);
-                alert('Error deleting schedule. Please try again later.');
-            }
-        }
-
-        // --- Delete Excercise ---
-        async function deleteExercise(exerciseName) {
-            try {
-                const response = await fetch(`${API_BASE}/exercises/${exerciseName}`, {
-                    method: 'DELETE',
-                });
-
-                if (response.ok) {
-                    // Remove the exercise from the local 'exercises' array
-                    exercises = exercises.filter(ex => ex.name !== exerciseName);
-                    updateExerciseDropdown(); // Refresh the dropdown
-                } else {
-                    console.error('Error deleting exercise:', response.status);
-                    alert('Error deleting exercise. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error deleting exercise:', error);
-                alert('Error deleting exercise. Please try again.');
-            }
-        }
-
+     // --- State Variables --- No longer needed at the top level
+    // let currentField = null;
+    // let exercises = [];
+    // let schedules = {};
+    // let users = [];
+    let currentField = null; // ADDED BACK
 
     // --- Event Listeners ---
-    // Prevent form submissions on the entire document  -- Keep this as a fallback
+
+    // Prevent form submissions (Keep this!)
     document.addEventListener('submit', (event) => {
         event.preventDefault();
         event.stopPropagation();
         console.log('Form submission prevented.');
     });
 
-    // Login
-    loginButton.addEventListener('click', async (event) => {
-        event.preventDefault(); // PREVENT DEFAULT HERE
-        console.log("Login button clicked");
-        const username = usernameInput.value;
-        const password = passwordInput.value;
+  // Login Button
+  loginButton.addEventListener('click', async (event) => {
+    console.log("Login button clicked");
+    const username = usernameInput.value;
+    const password = passwordInput.value;
 
-        const user = users.find(u => u.username === username && u.password === password);
+    try {
+      const users = await api.getUsers(); // Fetch users from the API
+      const user = authenticateUser(users, username, password); // Use auth module
 
-        if (user) {
-            console.log("Login successful - hiding form");
-            hideElement(loginForm);
-            showElement(appContainer);
-            await loadInitialSchedule();
-        } else {
-            console.log("Login failed");
-            showElement(loginError);
+      if (user) {
+        console.log("Login successful - hiding form");
+        hideElement(loginForm);
+        showElement(appContainer);
+        await loadInitialData(); // Load initial data (exercises + schedules)
+      } else {
+        console.log("Login failed");
+        showElement(loginError);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. See console for details.");
+    }
+  });
+
+    // Manage Exercises Button
+    manageExercisesButton.addEventListener('click', () => {
+        exerciseListContainer.classList.toggle('hidden');
+        if (!exerciseListContainer.classList.contains('hidden')) {
+            renderExerciseList(); // From exercises.js
         }
     });
 
-    // Group Selection (No changes needed)
+ // Group Selection Buttons
     groupButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            groupButtons.forEach(b => b.classList.remove('active', 'bg-blue-700', 'text-white'));
-            button.classList.add('active', 'bg-blue-700', 'text-white');
-            const groupId = button.id.replace('group-', '');
-            groupTitle.textContent = `Group ${groupId} Schedule`;
-            loadSchedule(groupId, datePicker.value);
-        });
+    button.addEventListener('click', async () => {
+        groupButtons.forEach(b => b.classList.remove('active', 'bg-blue-700', 'text-white'));
+        button.classList.add('active', 'bg-blue-700', 'text-white');
+        const groupId = button.id.replace('group-', '');
+        groupTitle.textContent = `Group ${groupId} Schedule`;
+
+        // *** FIX: Check for datePicker.value *before* calling loadSchedule ***
+        if (datePicker.value) {
+            await loadSchedule(groupId, datePicker.value);
+        } else {
+            console.warn("No date selected, not loading schedule."); // Helpful message
+        }
+    });
     });
 
-    // Date Change (No changes needed)
-    datePicker.addEventListener('change', () => {
+    // Date Picker Change
+    datePicker.addEventListener('change', async () => {
         const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
-        if (selectedGroup) {
-            loadSchedule(selectedGroup, datePicker.value);
+        // *** FIX: Check for both selectedGroup *and* datePicker.value ***
+        if (selectedGroup && datePicker.value) {
+            await loadSchedule(selectedGroup, datePicker.value);
+        } else {
+          console.warn("No group or date selected, not loading schedule.");
         }
     });
 
-    // Edit and Delete Buttons (Delegated Event Listener) (No changes needed)
+ // Edit and Delete Buttons (Delegated Event Listener on scheduleDisplay)
     scheduleDisplay.addEventListener('click', (event) => {
         if (event.target.classList.contains('edit-button')) {
             currentField = event.target.dataset.field;
-            // Pre-populate the exerciseSelect dropdown
+            // Pre-populate the exerciseSelect dropdown:
             openExerciseModal();
-                const currentExercise = document.getElementById(currentField).textContent;
-                exerciseSelect.value = currentExercise;
+              const currentExercise = document.getElementById(currentField).textContent;
+              exerciseSelect.value = currentExercise;
+          // Find and display description, this have to be fired after exerciseSelect.value = currentExercise, or else it cant find the value.
+          const selectedExercise = getExercises().find(ex => ex.name === currentExercise);
+          if (selectedExercise) {
+              exerciseDescriptionDisplay.textContent = selectedExercise.description || 'No description provided.';
+          } else {
+              exerciseDescriptionDisplay.textContent = ''; // Clear the display if no exercise is selected
+          }
         } else if (event.target.classList.contains('delete-button')) {
             const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
             const selectedDate = datePicker.value;
-            if (confirm(`Are you sure you want to delete the schedule for ${selectedDate} group ${selectedGroup}?`)) {
-                deleteSchedule(selectedDate, selectedGroup);
-            }
-        } else if (event.target.classList.contains('delete-exercise-button')) {
-            const exerciseName = event.target.dataset.exercise;
-            if (confirm(`Are you sure you want to delete the exercise "${exerciseName}"?`)) {
-                deleteExercise(exerciseName);
+            // *** FIX: Check for selectedDate and selectedGroup before confirmation ***
+            if (selectedDate && selectedGroup) {
+                if (confirm(`Are you sure you want to delete the schedule for ${selectedDate} group ${selectedGroup}?`)) {
+                    deleteSchedule(selectedDate, selectedGroup); //Now from schedules.js
+                }
+            } else {
+                alert("Please select both a date and a group before deleting.");
             }
         }
     });
 
-    // Save Exercise (from modal)
+ // Save Exercise (from modal)
     saveExerciseButton.addEventListener('click', async (event) => {
-        event.preventDefault(); // PREVENT DEFAULT HERE
-        console.log("Save Exercise button clicked");
-        const selectedExercise = exerciseSelect.value;
-        document.getElementById(currentField).textContent = selectedExercise;
+    console.log("Save Exercise button clicked");
+    const selectedExercise = exerciseSelect.value;
+
+    // Update the correct schedule field in the UI:
+    document.getElementById(currentField).textContent = selectedExercise;
+    closeExerciseModal();
+
+    const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
+    const selectedDate = datePicker.value;
+
+    // *** FIX: Check for selectedDate and selectedGroup *before* saving ***
+    if (!selectedDate || !selectedGroup) {
+        alert("Please select both a date and a group before saving.");
+        return; // Exit if either is missing
+    }
+    // Prepare the schedule data to be saved:
+    const scheduleData = {
+        'warm-up': document.getElementById('warm-up').textContent,
+        'exercise-1': document.getElementById('exercise-1').textContent,
+        'exercise-2': document.getElementById('exercise-2').textContent,
+        'exercise-3': document.getElementById('exercise-3').textContent,
+        'main-activity': document.getElementById('main-activity').textContent,
+        'cool-down': document.getElementById('cool-down').textContent,
+        'leaders': document.getElementById('leaders').value, // Get value from input
+    };
+    console.log("Saving schedule data:", scheduleData);
+        await saveSchedule(selectedDate, selectedGroup, scheduleData); // Use schedules module
+
+});
+
+    // Cancel Exercise (from modal)
+    cancelExerciseButton.addEventListener('click', () => {
         closeExerciseModal();
-
-        const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
-        const selectedDate = datePicker.value;
-
-        // Prepare the schedule data to be saved
-        const scheduleData = {
-            'warm-up': document.getElementById('warm-up').textContent,
-            'exercise-1': document.getElementById('exercise-1').textContent,
-            'exercise-2': document.getElementById('exercise-2').textContent,
-            'exercise-3': document.getElementById('exercise-3').textContent,
-            'main-activity': document.getElementById('main-activity').textContent,
-            'cool-down': document.getElementById('cool-down').textContent,
-            'leaders': document.getElementById('leaders').textContent, // This will be processed into an array
-        };
-        console.log("Saving schedule data:", scheduleData);
-        await saveSchedule(selectedDate, selectedGroup, scheduleData); // Await saveSchedule
     });
 
-    // Cancel Exercise (from modal) (No changes needed)
-    cancelExerciseButton.addEventListener('click', (event) => {
-        closeExerciseModal();
-    });
-
-    // Add Exercise Button (Open Modal) (No changes needed)
-    addExerciseButton.addEventListener('click', (event) => {
+    // Add Exercise Button (Open Modal)
+    addExerciseButton.addEventListener('click', () => {
+        newExerciseNameInput.value = '';
+        newExerciseDescriptionInput.value = '';
+        editExerciseIdInput.value = '';
+        document.getElementById('modal-title').textContent = 'Add New Exercise';
         showElement(addExerciseModal);
     });
 
-// Save New Exercise
-    saveNewExerciseButton.addEventListener('click', async (event) => {
-        event.preventDefault(); // PREVENT DEFAULT HERE
-        console.log("Save New Exercise button clicked");
-        const newExerciseName = newExerciseNameInput.value.trim();
+    // Save New/Edit Exercise (Modal)
+saveNewExerciseButton.addEventListener('click', async (event) => {
+    console.log("Save New/Edit Exercise button clicked");
+    const exerciseName = newExerciseNameInput.value.trim();
+    const exerciseDescription = newExerciseDescriptionInput.value.trim();
+    const exerciseId = editExerciseIdInput.value;
 
-        if (newExerciseName) {
-            try {
-                const response = await fetch(`${API_BASE}/exercises`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ name: newExerciseName }),
-                });
+    if (!exerciseName) {
+        alert("Please enter an exercise name.");
+        return;
+    }
 
-                if (response.ok) {
-                    const newExercise = await response.json(); // Get the new exercise (with ID)
-                    exercises.push(newExercise);
-                    newExerciseNameInput.value = '';
-                    hideElement(addExerciseModal);
-                    updateExerciseDropdown();
-                } else {
-                    console.error('Error saving exercise:', response.status);
-                    alert('Error saving exercise. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error saving exercise:', error);
-                alert('Error saving exercise. Please try again.');
-            }
+    try {
+        const exerciseData = { name: exerciseName, description: exerciseDescription };
+        if (exerciseId) {
+            // Update existing
+            await editExercise(exerciseId, exerciseData); // Use exercises module
         } else {
-            alert("Please enter an exercise name.");
+            // New exercise
+            await addExercise(exerciseData); // Use exercises module
         }
-    });
 
-    // Cancel New Exercise (No changes needed)
-    cancelNewExerciseButton.addEventListener('click', (event) => {
         newExerciseNameInput.value = '';
+        newExerciseDescriptionInput.value = '';
+        editExerciseIdInput.value = '';
+        hideElement(addExerciseModal);
+        // renderExerciseList is now called within addExercise/editExercise
+    } catch (error) {
+        // Error handling is already done in the module functions
+    }
+});
+
+    // Cancel New Exercise (Modal)
+    cancelNewExerciseButton.addEventListener('click', () => {
+        newExerciseNameInput.value = '';
+        newExerciseDescriptionInput.value = '';
+        editExerciseIdInput.value = '';
         hideElement(addExerciseModal);
     });
 
-    // --- Modal Functions --- (No changes needed)
+      // --- Event listener for exercise selection ---
+      exerciseSelect.addEventListener('change', () => {
+        const selectedExerciseName = exerciseSelect.value;
+        const selectedExercise = getExercises().find(ex => ex.name === selectedExerciseName);
 
-    function openExerciseModal() {
-        updateExerciseDropdown();
-        showElement(exerciseModal);
+        if (selectedExercise) {
+            exerciseDescriptionDisplay.textContent = selectedExercise.description || 'No description provided.';
+        } else {
+            exerciseDescriptionDisplay.textContent = ''; // Clear the display if no exercise is selected
+        }
+    });
+
+    // --- Modal Functions --- (Delegated to ui.js)
+        function openExerciseModal() {
+        updateExerciseDropdown(); // Populate the dropdown with exercises, from exercise module
+        showElement(exerciseModal); // Show the modal
     }
 
     function closeExerciseModal() {
-        hideElement(exerciseModal);
+        hideElement(exerciseModal); // Hide the modal
     }
 
-    function updateExerciseDropdown() {
-        exerciseSelect.innerHTML = '';
-        exercises.forEach(exercise => {
-            const option = document.createElement('option');
-            option.value = exercise.name;
-            option.textContent = exercise.name;
-            exerciseSelect.appendChild(option);
-        });
-    }
-    async function loadSchedules() {
-        try {
-            const response = await fetch(`${API_BASE}/schedules`);
-            schedules = await response.json();
-
-            // Initialize with an empty object if schedules is null/undefined
-            if (!schedules) {
-                schedules = {};
-            }
-
-        } catch (error) {
-            console.error('Error loading schedules:', error);
-            alert('Error loading schedules. Please try again later.'); // Basic error handling
-        }
-    }
     // --- Initial Data Load and UI Setup ---
 
-    async function loadInitialSchedule() {
-        await loadData();
-        await loadExercises();
-        await loadSchedules();
-        document.getElementById('group-1').click();
-        datePicker.value = new Date().toISOString().split('T')[0];
-        loadSchedule('1', datePicker.value);
+    async function loadInitialData() {
+      await loadData();       // Load users (for login)
+      await loadExercises();  // Load exercises
+      await loadSchedules();  // Load schedules
+      datePicker.value = new Date().toISOString().split('T')[0];  // Set initial date
+      document.getElementById('group-1').click();                  // Select Group 1
+        // loadSchedule is now triggered by the button click, so we don't call it here
     }
+    loadInitialData();
 
-    loadInitialSchedule();
-
-});
+}); // END OF DOMContentLoaded

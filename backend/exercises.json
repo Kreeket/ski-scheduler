@@ -1,98 +1,22 @@
 [
   {
-    "name": "Ski imitation"
+    "name": "Första",
+    "description": "Här är en kort förklaring. det går bra att lägga till?"
   },
   {
-    "name": "Skating with poles"
+    "name": "Andra",
+    "description": "Det går också bra eller hur?"
   },
   {
-    "name": "Double poling"
+    "name": "Första",
+    "description": "Andra"
   },
   {
-    "name": "Diagonal stride"
+    "name": "Testingtestingsdgsdg",
+    "description": "sdgsdg"
   },
   {
-    "name": "One-legged skiing"
-  },
-  {
-    "name": "No-pole skiing"
-  },
-  {
-    "name": "Downhill tuck"
-  },
-  {
-    "name": "Stair stepping"
-  },
-  {
-    "name": "Test1"
-  },
-  {
-    "name": "asdgsdg"
-  },
-  {
-    "name": "jfdgj"
-  },
-  {
-    "name": "ggg"
-  },
-  {
-    "name": "hjhjj"
-  },
-  {
-    "name": "f"
-  },
-  {
-    "name": "fffaaaee"
-  },
-  {
-    "name": "777"
-  },
-  {
-    "name": "Debug"
-  },
-  {
-    "name": "kkkk"
-  },
-  {
-    "name": "Fgetg"
-  },
-  {
-    "name": "sdgsdg"
-  },
-  {
-    "name": "debuggger"
-  },
-  {
-    "name": "shdsdh"
-  },
-  {
-    "name": "werh"
-  },
-  {
-    "name": "DEBUGGER1"
-  },
-  {
-    "name": "dfhj"
-  },
-  {
-    "name": "gg"
-  },
-  {
-    "name": "gsge"
-  },
-  {
-    "name": "Name of debug"
-  },
-  {
-    "name": "sghwe4hwh"
-  },
-  {
-    "name": "23ty2y72yu"
-  },
-  {
-    "name": "dfhjd67"
-  },
-  {
-    "name": "whg2qy6"
+    "name": "Test",
+    "description": "atsd"
   }
 ]

@@ -1,22 +1,18 @@
 const express = require('express');
-const fs = require('fs').promises; // Use the promise-based version of fs
+const fs = require('fs').promises;
 const path = require('path');
 const cors = require('cors');
 
 const app = express();
 const port = 3000;
 
-// Enable CORS for all origins (for development - you might want to restrict this in production)
 app.use(cors());
-
-// Middleware to parse JSON request bodies
 app.use(express.json());
 
 // --- Data File Paths ---
-//IMPORTANT: Now the paths are relative to the backend folder
 const exercisesPath = path.join(__dirname, 'exercises.json');
 const schedulesPath = path.join(__dirname, 'schedules.json');
-const usersPath = path.join(__dirname, 'users.json');
+const usersPath = path.join(__dirname, 'users.json'); // Path to users.json
 
 // --- Helper Functions ---
 async function readData(filePath) {
@@ -24,8 +20,9 @@ async function readData(filePath) {
         const data = await fs.readFile(filePath, 'utf8');
         return JSON.parse(data);
     } catch (error) {
-        if (error.code === 'ENOENT') { // File not found
-            return {}; // Return an empty OBJECT for schedules
+        if (error.code === 'ENOENT') {
+            // Return empty array for exercises/users, empty object for schedules
+            return filePath === schedulesPath ? {} : [];
         }
         console.error('Error reading file:', error);
         throw error; // Re-throw other errors
@@ -34,26 +31,24 @@ async function readData(filePath) {
 
 async function writeData(filePath, data) {
     try {
-        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8'); // Pretty-print JSON
+        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
     } catch (error) {
         console.error('Error writing file:', error);
         throw error;
     }
 }
 
-// --- API Endpoints ---
+// --- API Endpoints: Exercises ---
 
-// Get all exercises
 app.get('/api/exercises', async (req, res) => {
     try {
         const exercises = await readData(exercisesPath);
-        res.json(exercises);
+        res.status(200).json(exercises); // Use 200 OK
     } catch (error) {
         res.status(500).json({ message: 'Error getting exercises' });
     }
 });
 
-// Add a new exercise
 app.post('/api/exercises', async (req, res) => {
     try {
         const exercises = await readData(exercisesPath);
@@ -62,16 +57,16 @@ app.post('/api/exercises', async (req, res) => {
         if (!newExercise || !newExercise.name) {
             return res.status(400).json({ message: 'Exercise name is required' });
         }
+        newExercise.description = newExercise.description || "";
 
         exercises.push(newExercise);
         await writeData(exercisesPath, exercises);
-        res.status(201).contentType('application/json').json(newExercise);
+        res.status(201).json(newExercise); // 201 Created
     } catch (error) {
         res.status(500).json({ message: 'Error adding exercise' });
     }
 });
 
-// Update an exercise
 app.put('/api/exercises/:id', async (req, res) => {
     try {
         const exercises = await readData(exercisesPath);
@@ -79,37 +74,31 @@ app.put('/api/exercises/:id', async (req, res) => {
         const updatedExercise = req.body;
 
         if (!updatedExercise || !updatedExercise.name) {
-          return res.status(400).json({ message: 'Exercise name is required' });
+            return res.status(400).json({ message: 'Exercise name is required' });
         }
+        updatedExercise.description = updatedExercise.description || "";
 
-        // Find the index of the exercise to update
-        const index = exercises.findIndex(ex => ex.name === exerciseId); // Assuming 'name' is unique
-
+        const index = exercises.findIndex(ex => ex.name === exerciseId);
         if (index === -1) {
             return res.status(404).json({ message: 'Exercise not found' });
         }
 
-        exercises[index] = { ...exercises[index], ...updatedExercise }; // Update the exercise
+        exercises[index] = { ...exercises[index], ...updatedExercise };
         await writeData(exercisesPath, exercises);
-        res.status(200).json(exercises[index]); // Return the updated exercise
+        res.status(200).json(exercises[index]); // 200 OK
 
     } catch (error) {
         res.status(500).json({ message: 'Error updating exercise' });
     }
 });
 
-// Delete an exercise
 app.delete('/api/exercises/:id', async (req, res) => {
     try {
         let exercises = await readData(exercisesPath);
         const exerciseId = req.params.id;
-
-        // Filter out the exercise to delete
-        exercises = exercises.filter(ex => ex.name !== exerciseId); // Assuming 'name' is unique
-
+        exercises = exercises.filter(ex => ex.name !== exerciseId);
         await writeData(exercisesPath, exercises);
-        res.status(204).send(); // 204 No Content (successful deletion)
-
+        res.status(204).send(); // 204 No Content
     } catch (error) {
         res.status(500).json({ message: 'Error deleting exercise' });
     }
@@ -117,7 +106,6 @@ app.delete('/api/exercises/:id', async (req, res) => {
 
 // --- API Endpoints: Schedules ---
 
-// Get a single schedule by date and group
 app.get('/api/schedules/:date/:group', async (req, res) => {
     try {
         const schedules = await readData(schedulesPath);
@@ -134,7 +122,6 @@ app.get('/api/schedules/:date/:group', async (req, res) => {
     }
 });
 
-// Update a schedule by date and group
 app.put('/api/schedules/:date/:group', async (req, res) => {
     try {
         const schedules = await readData(schedulesPath);
@@ -167,50 +154,45 @@ app.put('/api/schedules/:date/:group', async (req, res) => {
     }
 });
 
-// Delete a schedule by date and group
 app.delete('/api/schedules/:date/:group', async (req, res) => {
     try {
         const schedules = await readData(schedulesPath);
         const { date, group } = req.params;
 
         if (schedules[date] && schedules[date][group]) {
-            delete schedules[date][group]; // Delete the specific schedule
-
-            // Optionally, clean up empty date entries
+            delete schedules[date][group];
             if (Object.keys(schedules[date]).length === 0) {
                 delete schedules[date];
             }
-
             await writeData(schedulesPath, schedules);
-            res.status(204).send(); // 204 No Content
+            res.status(204).send();
         } else {
-            res.status(404).json({ message: 'Schedule not found' }); // Not found
+            res.status(404).json({ message: 'Schedule not found' });
         }
     } catch (error) {
         res.status(500).json({ message: 'Error deleting schedule' });
     }
 });
 
-// Get all schedules.
-app.get('/api/schedules', async(req, res) => {
-    try {
-        const schedules = await readData(schedulesPath);
-        res.status(200).json(schedules)
-    } catch (error) {
-        res.status(500).json({message: 'Error getting schedule'})
-    }
-})
-
 // --- API Endpoints: Users ---
 // Get all users
-app.get('/api/users', async (req, res) => {
+app.get('/api/users', async (req, res) => {  // Added route for /api/users
     try {
         const users = await readData(usersPath);
-        res.json(users);
+        res.status(200).json(users);
     } catch (error) {
         res.status(500).json({ message: 'Error getting users' });
     }
 });
+
+app.get('/api/schedules', async(req, res) => {
+  try {
+    const schedules = await readData(schedulesPath)
+    res.status(200).json(schedules)
+  } catch (error) {
+    res.status(500).json({message: 'Error getting schedule'})
+  }
+})
 
 // Start the server
 app.listen(port, () => {
