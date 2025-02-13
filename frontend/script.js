@@ -1,10 +1,12 @@
+// frontend/script.js
+
 import * as api from './modules/api.js';
 import { authenticateUser } from './modules/auth.js';
-import { loadExercises, renderExerciseList, updateExerciseDropdown, addExercise, editExercise, deleteExercise, getExercises } from './modules/exercises.js';
+import { loadExercises, renderExerciseList, updateExerciseDropdown, addExercise, editExercise, deleteExercise, getExercises} from './modules/exercises.js';
 import { loadSchedules, loadSchedule, saveSchedule, deleteSchedule } from './modules/schedules.js';
-import { showElement, hideElement } from './modules/ui.js';
+import { showElement, hideElement, setInputValue, getInputValue, setElementText, getElementText} from './modules/ui.js';
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', async () => { // Make the main function async
     // --- DOM Element References ---
     const loginButton = document.getElementById('login-button');
     const usernameInput = document.getElementById('username');
@@ -80,31 +82,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
- // Group Selection Buttons
-    groupButtons.forEach(button => {
-    button.addEventListener('click', async () => {
-        groupButtons.forEach(b => b.classList.remove('active', 'bg-blue-700', 'text-white'));
-        button.classList.add('active', 'bg-blue-700', 'text-white');
-        const groupId = button.id.replace('group-', '');
-        groupTitle.textContent = `Group ${groupId} Schedule`;
-
-        // *** FIX: Check for datePicker.value *before* calling loadSchedule ***
-        if (datePicker.value) {
-            await loadSchedule(groupId, datePicker.value);
-        } else {
-            console.warn("No date selected, not loading schedule."); // Helpful message
-        }
+  // Group Selection Buttons
+  groupButtons.forEach(button => {
+    button.addEventListener('click', async () => { // Make this async
+      groupButtons.forEach(b => b.classList.remove('active', 'bg-blue-700', 'text-white'));
+      button.classList.add('active', 'bg-blue-700', 'text-white');
+      const groupId = button.id.replace('group-', '');
+      groupTitle.textContent = `Group ${groupId} Schedule`;
+      if (datePicker.value) {
+        await loadSchedule(groupId, datePicker.value); // Await the schedule load
+      }
     });
-    });
+  });
 
     // Date Picker Change
-    datePicker.addEventListener('change', async () => {
+    datePicker.addEventListener('change', async () => { // Make this async
         const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
-        // *** FIX: Check for both selectedGroup *and* datePicker.value ***
         if (selectedGroup && datePicker.value) {
-            await loadSchedule(selectedGroup, datePicker.value);
-        } else {
-          console.warn("No group or date selected, not loading schedule.");
+          await loadSchedule(selectedGroup, datePicker.value); // Await the schedule load
         }
     });
 
@@ -126,7 +121,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else if (event.target.classList.contains('delete-button')) {
             const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
             const selectedDate = datePicker.value;
-            // *** FIX: Check for selectedDate and selectedGroup before confirmation ***
             if (selectedDate && selectedGroup) {
                 if (confirm(`Are you sure you want to delete the schedule for ${selectedDate} group ${selectedGroup}?`)) {
                     deleteSchedule(selectedDate, selectedGroup); //Now from schedules.js
@@ -137,8 +131,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
- // Save Exercise (from modal)
-    saveExerciseButton.addEventListener('click', async (event) => {
+    // Save Exercise (from modal)
+   saveExerciseButton.addEventListener('click', async (event) => {
     console.log("Save Exercise button clicked");
     const selectedExercise = exerciseSelect.value;
 
@@ -149,11 +143,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const selectedGroup = document.querySelector('.group-button.active')?.id.replace('group-', '');
     const selectedDate = datePicker.value;
 
-    // *** FIX: Check for selectedDate and selectedGroup *before* saving ***
-    if (!selectedDate || !selectedGroup) {
-        alert("Please select both a date and a group before saving.");
-        return; // Exit if either is missing
-    }
     // Prepare the schedule data to be saved:
     const scheduleData = {
         'warm-up': document.getElementById('warm-up').textContent,
@@ -165,8 +154,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         'leaders': document.getElementById('leaders').value, // Get value from input
     };
     console.log("Saving schedule data:", scheduleData);
-        await saveSchedule(selectedDate, selectedGroup, scheduleData); // Use schedules module
-
+    await saveSchedule(selectedDate, selectedGroup, scheduleData); // Await!
 });
 
     // Cancel Exercise (from modal)
@@ -252,8 +240,7 @@ saveNewExerciseButton.addEventListener('click', async (event) => {
       await loadExercises();  // Load exercises
       await loadSchedules();  // Load schedules
       datePicker.value = new Date().toISOString().split('T')[0];  // Set initial date
-      document.getElementById('group-1').click();                  // Select Group 1
-        // loadSchedule is now triggered by the button click, so we don't call it here
+      document.getElementById('group-1').click(); // Select Group 1 and trigger load
     }
     loadInitialData();
 

@@ -30,7 +30,7 @@ export async function loadSchedule(groupId, date) {
         document.getElementById('cool-down').textContent = scheduleData['cool-down'] || '';
         document.getElementById('leaders').value = (scheduleData.leaders || []).join(', '); // Use value
     } catch (error) {
-//We are catching all errors inside of api.js, even 404.
+      //We are catching the error inside of api.js, even 404.
         console.error('Error loading schedule:', error);
         //alert('Error loading schedule. Please try again later.'); //Already handeled
     }
