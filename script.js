@@ -24,10 +24,10 @@ let currentWeek = getCurrentWeek(); // Initialize with the current week
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Authentication Section ---
     document.getElementById('loginBtn').addEventListener('click', async () => {
-        const username = document.getElementById('username').value;
+        //const username = document.getElementById('username').value; // No longer needed
         const password = document.getElementById('password').value;
 
-        if (await auth.authenticateUser(username, password)) {
+        if (await auth.authenticateUser(null, password)) { // Pass null for username
             ui.showAppContent();
              await exercises.loadExercises();
              loadAndDisplaySchedule(currentWeek);

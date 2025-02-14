@@ -2,3 +2,5 @@
 /node_modules/
 /frontend/node_modules/
 .DS_Store
+/backend/exercises.json/
+/backend/schedules.json/

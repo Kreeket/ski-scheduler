@@ -1,6 +1,7 @@
 const express = require('express');
-const cors = require('cors'); // Import the cors middleware
+const cors = require('cors');
 const { readData, writeData } = require('./db.js');
+const bcrypt = require('bcryptjs'); // Import bcrypt *here*
 
 const app = express();
 const port = 3000;
@@ -12,16 +13,6 @@ app.use(cors());
 app.use(express.json());
 
 // --- API Endpoints ---
-
-// Users
-app.get('/api/users', async (req, res) => {
-    try {
-        const users = await readData('users.json');
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching users' });
-    }
-});
 
 // Exercises
 app.get('/api/exercises', async (req, res) => {
@@ -133,13 +124,35 @@ app.delete('/api/schedules/:week', async (req, res) => {
         res.status(500).json({ message: 'Error deleting schedule' });
     }
 });
-//get all schedules
+
 app.get('/api/schedules', async (req, res) => {
     try {
         const schedules = await readData('schedules.json');
         res.json(schedules);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching schedules' });
+    }
+});
+
+const HASHED_PASSWORD = "$2b$10$nkjSWcI35hFrhXCWq3uecudcwKJ3pR3TsXO2wkRc08432NV2X5Mdu"; //REPLACE *OUTSIDE* the route handler
+
+app.post('/api/login', async (req, res) => {
+    const { password } = req.body;
+
+    if (!password) {
+        return res.status(400).json({ success: false, message: 'Password is required.' });
+    }
+
+    try {
+        const isMatch = await bcrypt.compare(password, HASHED_PASSWORD);
+        if (isMatch) {
+            res.json({ success: true });
+        } else {
+            res.status(401).json({ success: false, message: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        res.status(500).json({ success: false, message: 'Server error during login' });
     }
 });
 
