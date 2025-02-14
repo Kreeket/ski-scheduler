@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ski Training Scheduler</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles (keep these minimal, rely on Tailwind) */
+        body {
+            font-family: sans-serif;
+        }
+        .schedule-item {
+            margin-bottom: 1rem; /* Spacing between schedule items */
+        }
+        .schedule-item label {
+          font-weight: bold;
+        }
+
+        .exercise-item { /* Style the modal li items */
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+
+    <div class="container mx-auto p-4">  <h1 class="text-2xl font-bold text-center mb-4">Ski Training</h1>
+
+        <div id="authSection" class="mb-4">
+            <input type="text" id="username" placeholder="Username" class="w-full p-2 mb-2 border rounded">
+            <input type="password" id="password" placeholder="Password" class="w-full p-2 mb-2 border rounded">
+            <button type="button" id="loginBtn" class="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-700">Login</button>
+        </div>
+
+        <div id="appContent" class="hidden">
+
+            <div class="flex justify-between items-center mb-4">
+                <button type="button" id="prevWeek" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                    </svg>
+                </button>
+                <span id="currentWeekDisplay" class="text-lg font-bold"></span>
+                <button type="button" id="nextWeek" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                    </svg>
+                </button>
+            </div>
+
+            <div id="scheduleContainer" class="space-y-4">
+                <div class="schedule-item">
+                    <label for="warmup" class="block text-sm font-medium text-gray-700">Warm-up</label>
+                    <select id="warmup" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                    <button type="button" class="show-details-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 rounded mt-1" data-select-id="warmup">Details</button>
+                </div>
+
+                <div class="schedule-item">
+                    <label for="exercise1" class="block text-sm font-medium text-gray-700">Exercise 1</label>
+                    <select id="exercise1" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                    <button type="button" class="show-details-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 rounded mt-1" data-select-id="exercise1">Details</button>
+                </div>
+
+                <div class="schedule-item">
+                    <label for="exercise2" class="block text-sm font-medium text-gray-700">Exercise 2</label>
+                    <select id="exercise2" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                    <button type="button" class="show-details-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 rounded mt-1" data-select-id="exercise2">Details</button>
+                </div>
+
+                <div class="schedule-item">
+                    <label for="exercise3" class="block text-sm font-medium text-gray-700">Exercise 3</label>
+                    <select id="exercise3" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                    <button type="button" class="show-details-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 rounded mt-1" data-select-id="exercise3">Details</button>
+                </div>
+
+                <div class="schedule-item">
+                    <label for="mainActivity" class="block text-sm font-medium text-gray-700">Main Activity</label>
+                    <select id="mainActivity" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                    <button type="button" class="show-details-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 rounded mt-1" data-select-id="mainActivity">Details</button>
+                </div>
+
+                <div class="schedule-item">
+                    <label for="cooldown" class="block text-sm font-medium text-gray-700">Cool-down</label>
+                    <select id="cooldown" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></select>
+                    <button type="button" class="show-details-button bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs py-1 px-2 rounded mt-1" data-select-id="cooldown">Details</button>
+                </div>
+                 <div class="schedule-item">
+                    <label for="leaders" class="block text-sm font-medium text-gray-700">Leaders</label>
+                    <input type="text" id="leaders" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+
+                <div class="flex space-x-2">
+                    <button type="button" id="saveSchedule" class="flex-1 bg-green-500 text-white p-2 rounded hover:bg-green-700">Save</button>
+                    <button type="button" id="deleteSchedule" class="flex-1 bg-red-500 text-white p-2 rounded hover:bg-red-700">Delete</button>
+                </div>
+            </div>
+            <div id="exerciseDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+                <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+                    <h3 id="exerciseDetailsName" class="text-lg font-medium text-gray-900 mb-2"></h3>
+                    <p id="exerciseDetailsDescription" class="text-gray-700 text-base leading-relaxed mb-4 whitespace-pre-wrap"></p>
+                    <button type="button" id="closeExerciseDetailsModal" class="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-700">Close</button>
+                </div>
+            </div>
+              <div class="flex justify-center items-center mt-4">
+              <button type="button" id="manageExercisesBtn" class="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-700">Manage Exercises</button>
+            </div>
+
+            <div id="exercisesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+                <div class="relative top-10 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Manage Exercises</h3>
+                    <div id="exerciseList" class="mb-4"></div>
+                    <div>
+                        <input type="text" id="newExerciseName" placeholder="Exercise Name" class="w-full p-2 mb-2 border rounded">
+                        <input type="text" id="newExerciseDescription" placeholder="Description" class="w-full p-2 mb-2 border rounded">
+                        <button type="button" id="saveNewExerciseButton" class="w-full bg-green-500 text-white p-2 rounded hover:bg-green-700">Save</button>
+                    </div>
+                    <button type="button" id="closeExercisesModal" class="mt-4 w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-700">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
+</body>
+</html>
