@@ -68,6 +68,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         schedules.deleteSchedule(currentWeek);
     });
 
+    // --- Add Schedule Button ---
+     document.getElementById('addScheduleBtn').addEventListener('click', () => {
+        addScheduleForCurrentWeek(currentWeek);
+    });
+
       // --- Exercise Management ---
     document.getElementById('manageExercisesBtn').addEventListener('click', () => {
       exercises.showExercisesModal(); //show the modal
@@ -100,4 +105,8 @@ async function loadAndDisplaySchedule(yearWeek) {
     ui.updateWeekDisplay(yearWeek.split('-')[1], schedules.calculateDateRange(yearWeek)); // Pass the week
     exercises.populateExerciseDropdowns();
     ui.hideLoadingIndicator(); // Hide loader after everything is done
+}
+//Add schedule function
+async function addScheduleForCurrentWeek(yearWeek){
+    await schedules.createEmptySchedule(yearWeek)
 }

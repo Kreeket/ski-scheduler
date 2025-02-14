@@ -7,7 +7,7 @@ export async function loadSchedule(yearWeek) {
         if (schedule) {
             ui.populateScheduleForm(schedule);
         } else {
-            ui.clearScheduleForm();
+            ui.clearScheduleForm(); // This will now also show the button
         }
     } catch (error) {
         console.error("Error loading schedule:", error);
@@ -97,4 +97,18 @@ export function calculateDateRange(yearWeek) {
         end: isoWeekEnd,
         formatted: `${start} - ${end} ${year}`
     };
+}
+
+// Added Create Empty schedule Function
+export async function createEmptySchedule(yearWeek){
+    try {
+        await api.updateSchedule(yearWeek, {});
+        alert(`Schedule added for week: ${yearWeek}`)
+        loadSchedule(yearWeek);
+        }
+
+    catch (error) {
+        console.error("Error loading schedule:", error);
+        alert("Failed to load schedule."); // Basic error handling
+    }
 }
