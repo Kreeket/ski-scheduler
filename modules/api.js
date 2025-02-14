@@ -1,13 +1,7 @@
 const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your actual API URL
 
 // --- User Authentication ---
-export async function getUsers() {
-    const response = await fetch(`${API_BASE_URL}/users`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch users: ${response.status}`);
-    }
-    return response.json();
-}
+
 
 // --- Exercises ---
 

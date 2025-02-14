@@ -1,0 +1,14 @@
+{
+  "name": "ski-scheduler",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tailwindcss -i ./styles.css -o ./output.css",
+    "watch": "tailwindcss -i ./styles.css -o ./output.css -w"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.2",
+    "tailwindcss": "^3.4.17"
+  }
+}

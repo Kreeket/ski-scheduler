@@ -31,7 +31,7 @@ export async function saveCurrentSchedule(weekNumber) {
     }
 }
   export async function deleteSchedule(weekNumber) {
-      if (confirm(`Are you sure you want to delete the schedule for week ${weekNumber}?`)) {
+      if (confirm(`Are you sure you want to delete the schedule for week ${weekNumber}? This action cannot be undone.`)) {
         try {
           await api.deleteSchedule(weekNumber);
           alert("Schedule deleted successfully!");
@@ -42,27 +42,6 @@ export async function saveCurrentSchedule(weekNumber) {
         }
       }
     }
-
- export async function addNextWeekSchedule() {
-      try {
-        let lastWeek = await findLastWeek(); //get the last week from api
-        let nextWeek =  getNextWeek(lastWeek)
-        const schedule = await api.getSchedule(nextWeek);
-         if (schedule) { //if schedule already exist, don't make another
-            alert('The schedule for this week does already exist')
-         } else {
-            await api.updateSchedule(nextWeek, {});
-            alert(`Schedule added for week: ${nextWeek}`)
-            ui.clearScheduleForm();
-         }  
-        
-        }
-      
-    catch (error) {
-        console.error("Error loading schedule:", error);
-        alert("Failed to load schedule."); // Basic error handling
-    }
-  }    
 
 export function getPreviousWeek(weekNumber) {
     // Simple decrement, handle wrap-around

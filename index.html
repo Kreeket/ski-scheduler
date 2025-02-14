@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ski Training Scheduler</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="output.css"> <! Local CSS -->
     <style>
         /* Custom styles (keep these minimal, rely on Tailwind) */
         body {
@@ -15,10 +15,6 @@
         }
         .schedule-item label {
           font-weight: bold;
-        }
-
-        .exercise-item { /* Style the modal li items */
-            margin-bottom: 2rem;
         }
     </style>
 </head>
@@ -93,10 +89,10 @@
                     <button type="button" id="deleteSchedule" class="flex-1 bg-red-500 text-white p-2 rounded hover:bg-red-700">Delete</button>
                 </div>
             </div>
-            <div id="exerciseDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-                <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div id="exerciseDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+                <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
                     <h3 id="exerciseDetailsName" class="text-lg font-medium text-gray-900 mb-2"></h3>
-                    <p id="exerciseDetailsDescription" class="text-gray-700 text-base leading-relaxed mb-4 whitespace-pre-wrap"></p>
+                    <p id="exerciseDetailsDescription" class="text-gray-700 mb-4 whitespace-pre-wrap"></p>
                     <button type="button" id="closeExerciseDetailsModal" class="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-700">Close</button>
                 </div>
             </div>
@@ -104,8 +100,8 @@
               <button type="button" id="manageExercisesBtn" class="w-full bg-yellow-500 text-white p-2 rounded hover:bg-yellow-700">Manage Exercises</button>
             </div>
 
-            <div id="exercisesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-                <div class="relative top-10 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div id="exercisesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+                 <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
                     <h3 class="text-lg font-medium text-gray-900 mb-4">Manage Exercises</h3>
                     <div id="exerciseList" class="mb-4"></div>
                     <div>
