@@ -1,11 +1,11 @@
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables from .env
 const express = require('express');
 const cors = require('cors');
 const { readData, writeData } = require('./db.js');
-const bcrypt = require('bcryptjs'); // Import bcrypt *here*
+const bcrypt = require('bcryptjs');
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000; // Use PORT from environment, or 3000
 
 // Enable CORS for all origins (for development - be more restrictive in production)
 app.use(cors());
@@ -15,7 +15,7 @@ app.use(express.json());
 
 // --- API Endpoints ---
 
-// Exercises
+// Exercises (No changes here)
 app.get('/api/exercises', async (req, res) => {
     try {
         const exercises = await readData('exercises.json');
@@ -56,16 +56,16 @@ app.put('/api/exercises/:id', async (req, res) => {
       };
 
       await writeData('exercises.json', exercises);
-      res.json(exercises[exerciseIndex]); //return updated
+      res.json(exercises[exerciseIndex]);
     } catch (error) {
-      console.error(error); // Log the actual error
+      console.error(error);
       res.status(500).json({ message: 'Error updating exercise' });
     }
 });
 
 app.delete('/api/exercises/:id', async (req, res) => {
     try {
-      const exerciseName = req.params.id; //id
+      const exerciseName = req.params.id;
       const exercises = await readData('exercises.json');
       const exerciseIndex = exercises.findIndex(ex => ex.name === exerciseName);
 
@@ -77,18 +77,18 @@ app.delete('/api/exercises/:id', async (req, res) => {
       await writeData('exercises.json', exercises);
       res.status(200).json({ message: 'Exercise deleted' });
     } catch (error) {
-       console.error(error); // Log the actual error
+       console.error(error);
       res.status(500).json({ message: 'Error deleting exercise' });
     }
 });
 
-// Schedules
-app.get('/api/schedules/:week', async (req, res) => {
+// Schedules (No changes here)
+app.get('/api/schedules/:yearWeek', async (req, res) => {
     try {
-        const weekNumber = parseInt(req.params.week);
+        const yearWeek = req.params.yearWeek;
         const schedules = await readData('schedules.json');
-        if (schedules[weekNumber]) {
-            res.json(schedules[weekNumber]);
+        if (schedules[yearWeek]) {
+            res.json(schedules[yearWeek]);
         } else {
             res.status(404).json({ message: 'Schedule not found' });
         }
@@ -97,28 +97,28 @@ app.get('/api/schedules/:week', async (req, res) => {
     }
 });
 
-app.put('/api/schedules/:week', async (req, res) => {
+app.put('/api/schedules/:yearWeek', async (req, res) => {
     try {
-        const weekNumber = parseInt(req.params.week);
+        const yearWeek = req.params.yearWeek;
         const schedules = await readData('schedules.json');
-        schedules[weekNumber] = req.body;
+        schedules[yearWeek] = req.body;
         await writeData('schedules.json', schedules);
-        res.json(schedules[weekNumber]);
+        res.json(schedules[yearWeek]);
     } catch (error) {
         res.status(500).json({ message: 'Error updating schedule' });
     }
 });
 
-app.delete('/api/schedules/:week', async (req, res) => {
+app.delete('/api/schedules/:yearWeek', async (req, res) => {
     try {
-        const weekNumber = parseInt(req.params.week);
+        const yearWeek = req.params.yearWeek;
         const schedules = await readData('schedules.json');
-        if (schedules[weekNumber]) {
-          delete schedules[weekNumber];
-          await writeData('schedules.json', schedules);
-          res.status(200).json({ message: 'Schedule deleted' });
-        }else {
-          res.status(404).json({ message: 'Schedule not found' });
+        if (schedules[yearWeek]) {
+            delete schedules[yearWeek];
+            await writeData('schedules.json', schedules);
+            res.status(200).json({ message: 'Schedule deleted' });
+        } else {
+            res.status(404).json({ message: 'Schedule not found' });
         }
 
     } catch (error) {
@@ -135,8 +135,7 @@ app.get('/api/schedules', async (req, res) => {
     }
 });
 
-const HASHED_PASSWORD = process.env.HASHED_PASSWORD;
-
+// Login Route (using environment variable)
 app.post('/api/login', async (req, res) => {
     const { password } = req.body;
 
@@ -145,7 +144,7 @@ app.post('/api/login', async (req, res) => {
     }
 
     try {
-        const isMatch = await bcrypt.compare(password, HASHED_PASSWORD);
+        const isMatch = await bcrypt.compare(password, process.env.HASHED_PASSWORD); // Use process.env
         if (isMatch) {
             res.json({ success: true });
         } else {
@@ -156,6 +155,7 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Server error during login' });
     }
 });
+
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);

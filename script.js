@@ -4,21 +4,31 @@ import * as schedules from './modules/schedules.js';
 import * as exercises from './modules/exercises.js';
 import * as auth from './modules/auth.js';
 
-// Function to calculate the current ISO week number
+// Function to calculate the current ISO week number AND year
 function getCurrentWeek() {
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const dayOfYear = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
     let weekNumber = Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
-    //consider week 53
-     if (weekNumber === 0) {
-         const prevYearStart = new Date(now.getFullYear() - 1, 0, 1);
-         weekNumber = Math.ceil((dayOfYear + 365 + prevYearStart.getDay() + 1) / 7); //consider week 53
+    let year = now.getFullYear();
+
+    // Handle week 53 (it can belong to the previous year)
+    if (weekNumber === 0) {
+        const prevYearStart = new Date(now.getFullYear() - 1, 0, 1);
+        weekNumber = Math.ceil((dayOfYear + 365 + prevYearStart.getDay() + 1) / 7);
+        year = now.getFullYear() -1;
+    }
+     // Handle week 53 (it can belong to the next year)
+     if(weekNumber === 53){
+        const nextYearStart = new Date(now.getFullYear() + 1, 0, 1);
+        if(now >= nextYearStart){
+            weekNumber = 1;
+            year = now.getFullYear() + 1;
+        }
      }
 
-    return weekNumber;
+    return `${year}-${weekNumber}`; // Return in "YYYY-WW" format
 }
-
 let currentWeek = getCurrentWeek(); // Initialize with the current week
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -84,10 +94,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 });
 
-async function loadAndDisplaySchedule(weekNumber) {
+async function loadAndDisplaySchedule(yearWeek) {
     ui.showLoadingIndicator(); // Show loader *before* fetching
-    await schedules.loadSchedule(weekNumber);
-    ui.updateWeekDisplay(weekNumber, schedules.calculateDateRange(weekNumber));
+    await schedules.loadSchedule(yearWeek);
+    ui.updateWeekDisplay(yearWeek.split('-')[1], schedules.calculateDateRange(yearWeek)); // Pass the week
     exercises.populateExerciseDropdowns();
     ui.hideLoadingIndicator(); // Hide loader after everything is done
 }
