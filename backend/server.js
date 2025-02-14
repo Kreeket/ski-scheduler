@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { readData, writeData } = require('./db.js');
@@ -134,7 +135,7 @@ app.get('/api/schedules', async (req, res) => {
     }
 });
 
-const HASHED_PASSWORD = "$2b$10$nkjSWcI35hFrhXCWq3uecudcwKJ3pR3TsXO2wkRc08432NV2X5Mdu"; //REPLACE *OUTSIDE* the route handler
+const HASHED_PASSWORD = process.env.HASHED_PASSWORD;
 
 app.post('/api/login', async (req, res) => {
     const { password } = req.body;
