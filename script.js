@@ -24,13 +24,14 @@ let currentWeek = getCurrentWeek(); // Initialize with the current week
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Authentication Section ---
     document.getElementById('loginBtn').addEventListener('click', async () => {
-        //const username = document.getElementById('username').value; // No longer needed
         const password = document.getElementById('password').value;
 
         if (await auth.authenticateUser(null, password)) { // Pass null for username
             ui.showAppContent();
+            ui.showLoadingIndicator(); // Show loader *before* fetching
              await exercises.loadExercises();
              loadAndDisplaySchedule(currentWeek);
+              ui.hideLoadingIndicator();
 
         } else {
             alert('Invalid credentials');
@@ -73,6 +74,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('saveNewExerciseButton').addEventListener('click', async () => {
       exercises.saveNewExercise();
     });
+      // --- Search Function ---
+    document.getElementById('exerciseSearch').addEventListener('input', () => {
+      exercises.renderExerciseList();
+    });
      // Load exercises and the current week's schedule initially
      await exercises.loadExercises();
      loadAndDisplaySchedule(currentWeek);
@@ -80,8 +85,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 async function loadAndDisplaySchedule(weekNumber) {
+    ui.showLoadingIndicator(); // Show loader *before* fetching
     await schedules.loadSchedule(weekNumber);
-    ui.updateWeekDisplay(weekNumber, schedules.calculateDateRange(weekNumber)); // Update the display
-    exercises.populateExerciseDropdowns(); // Populate all dropdowns
-
+    ui.updateWeekDisplay(weekNumber, schedules.calculateDateRange(weekNumber));
+    exercises.populateExerciseDropdowns();
+    ui.hideLoadingIndicator(); // Hide loader after everything is done
 }

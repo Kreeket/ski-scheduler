@@ -80,11 +80,17 @@ export function calculateDateRange(weekNumber) {
     const isoWeekEnd = new Date(isoWeekStart);
     isoWeekEnd.setDate(isoWeekStart.getDate() + 6);
 
-    const formatDate = (date) => { //helper to output readable dates
-        const d = new Date(date);
-        const month = `${d.getMonth() + 1}`.padStart(2, '0');
-        const day = `${d.getDate()}`.padStart(2, '0');
-        return `${d.getFullYear()}-${month}-${day}`
+    // Helper function to format a single date part
+    const formatDatePart = (date) => {
+      return `${date.getDate()}/${date.getMonth() + 1}`; // Day/Month
     };
-    return `${formatDate(isoWeekStart)} to ${formatDate(isoWeekEnd)}`;
+	  const start = formatDatePart(isoWeekStart);
+    const end = formatDatePart(isoWeekEnd)
+
+
+    return {
+        start: isoWeekStart, // Keep Date objects for potential future use
+        end: isoWeekEnd,     // Keep Date objects for potential future use
+        formatted: `${start} - ${end} ${year}` // v7 (10/2 - 16/2 2025)
+    };
 }

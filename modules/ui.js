@@ -1,5 +1,5 @@
 export function updateWeekDisplay(weekNumber, dateRange) {
-  document.getElementById('currentWeekDisplay').textContent = `Week ${weekNumber} (${dateRange})`;
+  document.getElementById('currentWeekDisplay').textContent = `v${weekNumber} (${dateRange.formatted})`;
 }
 
 export function populateScheduleForm(schedule) {
@@ -56,4 +56,14 @@ export function hideElement(element) {
 
 export function showElement(element) {
   element.classList.remove('hidden');
+}
+
+export function showLoadingIndicator() {
+  document.getElementById('loadingIndicator').classList.remove('hidden');
+  document.getElementById('scheduleContainer').classList.add('hidden'); //Hide form
+}
+
+export function hideLoadingIndicator() {
+  document.getElementById('loadingIndicator').classList.add('hidden');
+  document.getElementById('scheduleContainer').classList.remove('hidden'); //Show form
 }
