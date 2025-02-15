@@ -1,9 +1,9 @@
 import * as api from './api.js';
 import * as ui from './ui.js';
 
-export async function loadSchedule(yearWeek) {
+export async function loadSchedule(group, yearWeek) { // Added group parameter
     try {
-        const schedule = await api.getSchedule(yearWeek);
+        const schedule = await api.getSchedule(group, yearWeek); // Pass group to API
         if (schedule) {
             ui.populateScheduleForm(schedule);
         } else {
@@ -15,22 +15,22 @@ export async function loadSchedule(yearWeek) {
     }
 }
 
-export async function saveCurrentSchedule(yearWeek) {
+export async function saveCurrentSchedule(group, yearWeek) { // Added group parameter
     const scheduleData = ui.getScheduleFormData();
     try {
-        await api.updateSchedule(yearWeek, scheduleData);
+        await api.updateSchedule(group, yearWeek, scheduleData); // Pass group to API
         alert("Schedule saved successfully!");
-        loadSchedule(yearWeek); // Re-load to update dropdowns
+        loadSchedule(group, yearWeek); // Re-load to update dropdowns, pass group
     } catch (error) {
         console.error("Error saving schedule:", error);
         alert("Failed to save schedule.");
     }
 }
 
-export async function deleteSchedule(yearWeek) {
+export async function deleteSchedule(group, yearWeek) { // Added group parameter
     if (confirm(`Are you sure you want to delete the schedule for week ${yearWeek}? This action cannot be undone.`)) {
         try {
-            await api.deleteSchedule(yearWeek);
+            await api.deleteSchedule(group, yearWeek); // Pass group to API
             alert("Schedule deleted successfully!");
             ui.clearScheduleForm();
         } catch (error) {
@@ -100,11 +100,11 @@ export function calculateDateRange(yearWeek) {
 }
 
 // Added Create Empty schedule Function
-export async function createEmptySchedule(yearWeek){
+export async function createEmptySchedule(group, yearWeek){ //Added group
     try {
-        await api.updateSchedule(yearWeek, {});
+        await api.updateSchedule(group, yearWeek, {}); //Added group
         alert(`Schedule added for week: ${yearWeek}`)
-        loadSchedule(yearWeek);
+        loadSchedule(group, yearWeek); //Added group
         }
 
     catch (error) {

@@ -82,13 +82,13 @@ app.delete('/api/exercises/:id', async (req, res) => {
     }
 });
 
-// Schedules (No changes here)
-app.get('/api/schedules/:yearWeek', async (req, res) => {
+// --- Schedules --- (Modified Routes)
+app.get('/api/schedules/:group/:yearWeek', async (req, res) => {
     try {
-        const yearWeek = req.params.yearWeek;
+        const { group, yearWeek } = req.params;
         const schedules = await readData('schedules.json');
-        if (schedules[yearWeek]) {
-            res.json(schedules[yearWeek]);
+        if (schedules[group] && schedules[group][yearWeek]) {
+            res.json(schedules[group][yearWeek]);
         } else {
             res.status(404).json({ message: 'Schedule not found' });
         }
@@ -97,43 +97,39 @@ app.get('/api/schedules/:yearWeek', async (req, res) => {
     }
 });
 
-app.put('/api/schedules/:yearWeek', async (req, res) => {
+app.put('/api/schedules/:group/:yearWeek', async (req, res) => {
     try {
-        const yearWeek = req.params.yearWeek;
+        const { group, yearWeek } = req.params;
         const schedules = await readData('schedules.json');
-        schedules[yearWeek] = req.body;
+		//Initialize group if not existing
+        if (!schedules[group]) {
+            schedules[group] = {};
+        }
+        schedules[group][yearWeek] = req.body;
         await writeData('schedules.json', schedules);
-        res.json(schedules[yearWeek]);
+        res.json(schedules[group][yearWeek]);
     } catch (error) {
         res.status(500).json({ message: 'Error updating schedule' });
     }
 });
 
-app.delete('/api/schedules/:yearWeek', async (req, res) => {
+
+app.delete('/api/schedules/:group/:yearWeek', async (req, res) => {
     try {
-        const yearWeek = req.params.yearWeek;
+        const { group, yearWeek } = req.params;
         const schedules = await readData('schedules.json');
-        if (schedules[yearWeek]) {
-            delete schedules[yearWeek];
+        if (schedules[group] && schedules[group][yearWeek]) {
+            delete schedules[group][yearWeek];
             await writeData('schedules.json', schedules);
             res.status(200).json({ message: 'Schedule deleted' });
         } else {
             res.status(404).json({ message: 'Schedule not found' });
         }
-
     } catch (error) {
         res.status(500).json({ message: 'Error deleting schedule' });
     }
 });
 
-app.get('/api/schedules', async (req, res) => {
-    try {
-        const schedules = await readData('schedules.json');
-        res.json(schedules);
-    } catch (error) {
-        res.status(500).json({ message: 'Error fetching schedules' });
-    }
-});
 
 // Login Route (using environment variable)
 app.post('/api/login', async (req, res) => {

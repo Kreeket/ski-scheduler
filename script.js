@@ -12,96 +12,81 @@ function getCurrentWeek() {
     let weekNumber = Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
     let year = now.getFullYear();
 
-    // Handle week 53 (it can belong to the previous year)
+    // Handle week 53 (it can belong to the previous year or the next)
     if (weekNumber === 0) {
         const prevYearStart = new Date(now.getFullYear() - 1, 0, 1);
         weekNumber = Math.ceil((dayOfYear + 365 + prevYearStart.getDay() + 1) / 7);
-        year = now.getFullYear() -1;
+        year = now.getFullYear() - 1;
     }
-     // Handle week 53 (it can belong to the next year)
-     if(weekNumber === 53){
+    if (weekNumber === 53) {
         const nextYearStart = new Date(now.getFullYear() + 1, 0, 1);
-        if(now >= nextYearStart){
+        if (now >= nextYearStart) {
             weekNumber = 1;
             year = now.getFullYear() + 1;
         }
-     }
+    }
 
     return `${year}-${weekNumber}`; // Return in "YYYY-WW" format
 }
+
 let currentWeek = getCurrentWeek(); // Initialize with the current week
+let selectedGroup = null; // Global variable to store the selected group
 
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Authentication Section ---
     document.getElementById('loginBtn').addEventListener('click', async () => {
         const password = document.getElementById('password').value;
 
-        if (await auth.authenticateUser(null, password)) { // Pass null for username
-            ui.showAppContent();
-            ui.showLoadingIndicator(); // Show loader *before* fetching
-             await exercises.loadExercises();
-             loadAndDisplaySchedule(currentWeek);
-              ui.hideLoadingIndicator();
-
+        if (await auth.authenticateUser(null, password)) {
+            ui.showGroupSelection(); // Show group selection after login
+            document.getElementById('authSection').classList.add('hidden'); // Hide login
         } else {
             alert('Invalid credentials');
         }
     });
 
+    // --- Group Selection ---
+    document.getElementById('group1Btn').addEventListener('click', () => selectGroup('group1'));
+    document.getElementById('group2Btn').addEventListener('click', () => selectGroup('group2'));
+    document.getElementById('group3Btn').addEventListener('click', () => selectGroup('group3'));
+
     // --- Week Navigation ---
     document.getElementById('prevWeek').addEventListener('click', () => {
         currentWeek = schedules.getPreviousWeek(currentWeek);
-        loadAndDisplaySchedule(currentWeek);
+        loadAndDisplaySchedule(); // No group passed here - it's already set
     });
 
     document.getElementById('nextWeek').addEventListener('click', () => {
         currentWeek = schedules.getNextWeek(currentWeek);
-        loadAndDisplaySchedule(currentWeek);
+        loadAndDisplaySchedule(); // No group passed here
     });
 
     // --- Schedule Saving and Deleting---
     document.getElementById('saveSchedule').addEventListener('click', () => {
-        schedules.saveCurrentSchedule(currentWeek);
+      schedules.saveCurrentSchedule(selectedGroup, currentWeek); // Pass group
     });
 
     document.getElementById('deleteSchedule').addEventListener('click', () => {
-        schedules.deleteSchedule(currentWeek);
+        schedules.deleteSchedule(selectedGroup, currentWeek); // Pass group
     });
 
     // --- Add Schedule Button ---
      document.getElementById('addScheduleBtn').addEventListener('click', () => {
-        addScheduleForCurrentWeek(currentWeek);
+        addScheduleForCurrentWeek(selectedGroup, currentWeek); //Pass group
     });
 
       // --- Exercise Management ---
     document.getElementById('manageExercisesBtn').addEventListener('click', () => {
       exercises.showExercisesModal(); //show the modal
     });
-
-    // --- Close Exercise Modal ---
-    // Use a named function for clarity and reusability
-    function closeModal(modalId) {
-        ui.hideElement(document.getElementById(modalId));
-    }
-
-    document.getElementById('closeExercisesModal').addEventListener('click', () => closeModal('exercisesModal'));
-    // --- Close Exercise Detail Modal ---
-
-    document.getElementById('closeExerciseDetailsModal').addEventListener('click', () => closeModal('exerciseDetailsModal'));
-
-    // --- Add click-outside-to-close functionality ---
-    document.getElementById('exercisesModal').addEventListener('click', (event) => {
-        if (event.target.id === 'exercisesModal') { // Only close if the *overlay* is clicked
-            closeModal('exercisesModal');
-        }
+      // --- Close Exercise Modal ---
+    document.getElementById('closeExercisesModal').addEventListener('click', () => {
+      ui.hideElement(document.getElementById('exercisesModal'))//close it by hiding it
     });
-
-    document.getElementById('exerciseDetailsModal').addEventListener('click', (event) => {
-        if (event.target.id === 'exerciseDetailsModal') {
-            closeModal('exerciseDetailsModal');
-        }
+      // --- Close Exercise Detail Modal ---
+    document.getElementById('closeExerciseDetailsModal').addEventListener('click', () => {
+      ui.hideElement(document.getElementById('exerciseDetailsModal'))//close it by hiding it
     });
-
       // --- Save New Exercise---
     document.getElementById('saveNewExerciseButton').addEventListener('click', async () => {
       exercises.saveNewExercise();
@@ -110,20 +95,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('exerciseSearch').addEventListener('input', () => {
       exercises.renderExerciseList();
     });
-     // Load exercises and the current week's schedule initially
-     await exercises.loadExercises();
-     loadAndDisplaySchedule(currentWeek);
-
 });
 
-async function loadAndDisplaySchedule(yearWeek) {
-    ui.showLoadingIndicator(); // Show loader *before* fetching
-    await schedules.loadSchedule(yearWeek);
-    ui.updateWeekDisplay(yearWeek.split('-')[1], schedules.calculateDateRange(yearWeek)); // Pass the week
-    exercises.populateExerciseDropdowns();
-    ui.hideLoadingIndicator(); // Hide loader after everything is done
+// --- Helper function to select a group ---
+async function selectGroup(group) {
+    selectedGroup = group;
+    ui.hideGroupSelection();
+    ui.showAppContent();
+    ui.showLoadingIndicator();
+    await exercises.loadExercises(); // Load exercises (they are shared)
+    loadAndDisplaySchedule(); // Load schedule for the selected group and current week
+    ui.hideLoadingIndicator();
 }
+
+async function loadAndDisplaySchedule() {
+    if (!selectedGroup) return; // Don't load if no group is selected
+    ui.showLoadingIndicator();
+    await schedules.loadSchedule(selectedGroup, currentWeek); // Pass group to loadSchedule
+    ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));
+    exercises.populateExerciseDropdowns();
+    ui.hideLoadingIndicator();
+}
+
 //Add schedule function
-async function addScheduleForCurrentWeek(yearWeek){
-    await schedules.createEmptySchedule(yearWeek)
+async function addScheduleForCurrentWeek(group, yearWeek){
+    await schedules.createEmptySchedule(group, yearWeek)
 }

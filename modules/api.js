@@ -52,42 +52,43 @@ export async function deleteExercise(id) {
 }
 
 // --- Schedules ---
+// MODIFIED functions: now include group in the URL
+export async function getSchedule(group, yearWeek) {
+    const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`);
+    if (!response.ok) {
+        if (response.status === 404) {
+            return null;
+        }
+        throw new Error(`Failed to fetch schedule: ${response.status}`);
+    }
+    return response.json();
+}
 
-export async function getSchedule(yearWeek) {
-	const response = await fetch(`${API_BASE_URL}/schedules/${yearWeek}`);
-	 if (!response.ok) {
-		 if (response.status === 404) {
-			 return null; // Return null for 404 (schedule not found)
-		 }
-		  throw new Error(`Failed to fetch schedule: ${response.status}`);
-	  }
-	  return response.json();
-  }
+export async function updateSchedule(group, yearWeek, scheduleData) {
+    const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(scheduleData),
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to update schedule: ${response.status}`);
+    }
+    return response.json();
+}
 
-  export async function updateSchedule(yearWeek, scheduleData) {
-	  const response = await fetch(`${API_BASE_URL}/schedules/${yearWeek}`, {
-		  method: 'PUT',
-		  headers: {
-			  'Content-Type': 'application/json',
-		  },
-		  body: JSON.stringify(scheduleData),
-	  });
-	  if (!response.ok) {
-		  throw new Error(`Failed to update schedule: ${response.status}`);
-	  }
-	  return response.json();
-  }
-
-  export async function deleteSchedule(yearWeek) {
-	  const response = await fetch(`${API_BASE_URL}/schedules/${yearWeek}`, {
-		  method: 'DELETE',
-	  });
-	  if (!response.ok) {
-		  throw new Error(`Failed to delete schedule: ${response.status}`);
-	  }
-		return response.json(); // Or just return response.ok if you don't need the data
-  }
+export async function deleteSchedule(group, yearWeek) {
+    const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`, {
+        method: 'DELETE',
+    });
+     if (!response.ok) {
+        throw new Error(`Failed to fetch schedule: ${response.status}`);
+    }
+    return response.json();
+}
 //get all schedules
+//Not used at the moment
 export async function getSchedules() {
     const response = await fetch(`${API_BASE_URL}/schedules`);
     if (!response.ok) {

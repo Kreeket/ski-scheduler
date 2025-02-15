@@ -23,25 +23,25 @@ export function populateScheduleForm(schedule) {
 }
 
 export function getScheduleFormData() {
-  return {
-      warmup: document.getElementById('warmup').value,
-      exercise1: document.getElementById('exercise1').value,
-      exercise2: document.getElementById('exercise2').value,
-      exercise3: document.getElementById('exercise3').value,
-      mainActivity: document.getElementById('mainActivity').value,
-      cooldown: document.getElementById('cooldown').value,
-      leaders: document.getElementById('leaders').value
+   return {
+    warmup: document.getElementById('warmup').value,
+    exercise1: document.getElementById('exercise1').value,
+    exercise2: document.getElementById('exercise2').value,
+    exercise3: document.getElementById('exercise3').value,
+    mainActivity: document.getElementById('mainActivity').value,
+    cooldown: document.getElementById('cooldown').value,
+    leaders: document.getElementById('leaders').value
   };
 }
-
+// MODIFIED, also hides the button.
 export function clearScheduleForm() {
-  const fields = ['warmup', 'exercise1', 'exercise2', 'exercise3', 'mainActivity', 'cooldown', 'leaders'];
-  fields.forEach(field => {
+    const fields = ['warmup', 'exercise1', 'exercise2', 'exercise3', 'mainActivity', 'cooldown', 'leaders'];
+    fields.forEach(field => {
       const element = document.getElementById(field);
       if (element.tagName === 'SELECT') {
-          element.value = ''; // Clear dropdowns
+        element.value = ''; // Clear dropdowns
       } else {
-          element.value = ''; // Clear other inputs (like leaders)
+        element.value = ''; // Clear other inputs (like leaders)
       }
   });
   showAddScheduleButton(); // Show the "Add Schedule" button, hide form
@@ -62,21 +62,31 @@ export function showElement(element) {
 
 export function showLoadingIndicator() {
   document.getElementById('loadingIndicator').classList.remove('hidden');
-  document.getElementById('scheduleContainer').classList.add('hidden'); // Hide form
+  document.getElementById('scheduleContainer').classList.add('hidden'); //Hide form
   hideAddScheduleButton(); // Hide the add schedule button, while loading
 }
 
 export function hideLoadingIndicator() {
   document.getElementById('loadingIndicator').classList.add('hidden');
+  //document.getElementById('scheduleContainer').classList.remove('hidden'); //Show form Removed
 }
-
-// Corrected functions to show/hide "Add Schedule" button AND schedule form
+// NEW functions to show/hide "Add Schedule" button
 export function showAddScheduleButton() {
   document.getElementById('addScheduleForCurrentWeek').classList.remove('hidden');
-  document.getElementById('scheduleContainer').classList.add('hidden'); // Hide form
+  document.getElementById('scheduleContainer').classList.add('hidden'); //hide the form
 }
 
 export function hideAddScheduleButton() {
   document.getElementById('addScheduleForCurrentWeek').classList.add('hidden');
-  document.getElementById('scheduleContainer').classList.remove('hidden'); // Show form
+  document.getElementById('scheduleContainer').classList.remove('hidden'); //show the form
+}
+
+// Show group selection
+export function showGroupSelection() {
+  document.getElementById('groupSelection').classList.remove('hidden');
+}
+
+// Hide group selection
+export function hideGroupSelection() {
+  document.getElementById('groupSelection').classList.add('hidden');
 }
