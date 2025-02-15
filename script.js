@@ -77,14 +77,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('manageExercisesBtn').addEventListener('click', () => {
       exercises.showExercisesModal(); //show the modal
     });
-      // --- Close Exercise Modal ---
-    document.getElementById('closeExercisesModal').addEventListener('click', () => {
-      ui.hideElement(document.getElementById('exercisesModal'))//close it by hiding it
+
+    // --- Close Exercise Modal ---
+    // Use a named function for clarity and reusability
+    function closeModal(modalId) {
+        ui.hideElement(document.getElementById(modalId));
+    }
+
+    document.getElementById('closeExercisesModal').addEventListener('click', () => closeModal('exercisesModal'));
+    // --- Close Exercise Detail Modal ---
+
+    document.getElementById('closeExerciseDetailsModal').addEventListener('click', () => closeModal('exerciseDetailsModal'));
+
+    // --- Add click-outside-to-close functionality ---
+    document.getElementById('exercisesModal').addEventListener('click', (event) => {
+        if (event.target.id === 'exercisesModal') { // Only close if the *overlay* is clicked
+            closeModal('exercisesModal');
+        }
     });
-      // --- Close Exercise Detail Modal ---
-    document.getElementById('closeExerciseDetailsModal').addEventListener('click', () => {
-      ui.hideElement(document.getElementById('exerciseDetailsModal'))//close it by hiding it
+
+    document.getElementById('exerciseDetailsModal').addEventListener('click', (event) => {
+        if (event.target.id === 'exerciseDetailsModal') {
+            closeModal('exerciseDetailsModal');
+        }
     });
+
       // --- Save New Exercise---
     document.getElementById('saveNewExerciseButton').addEventListener('click', async () => {
       exercises.saveNewExercise();

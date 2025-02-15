@@ -4,7 +4,7 @@ import * as ui from './ui.js';
 let exercises = []; //Local cache
 
 export async function loadExercises() {
-  ui.showLoadingIndicator(); // Add this line
+  ui.showLoadingIndicator();
   try {
     exercises = await api.getExercises();
     populateExerciseDropdowns()
@@ -13,7 +13,7 @@ export async function loadExercises() {
     console.error('Error loading exercises:', error);
     alert('Failed to load exercises.');
   } finally {
-    ui.hideLoadingIndicator(); // Add this line, inside a finally block
+    ui.hideLoadingIndicator();
   }
 }
 
@@ -71,45 +71,37 @@ export function showExercisesModal(){
         renderExerciseList();
         ui.showElement(document.getElementById('exercisesModal'));
 }
-// MODIFIED function
+
+// ---  MODIFIED renderExerciseList FUNCTION ---
 export function renderExerciseList() {
     const listContainer = document.getElementById('exerciseList');
     listContainer.innerHTML = ''; // Clear previous list
 
-    const searchTerm = document.getElementById('exerciseSearch')?.value.toLowerCase() || ''; // Get search term, handle null
+    const searchTerm = document.getElementById('exerciseSearch')?.value.toLowerCase() || '';
 
     exercises.forEach(exercise => {
-        // Filter exercises based on search term
         if (searchTerm && !exercise.name.toLowerCase().includes(searchTerm) && !exercise.description.toLowerCase().includes(searchTerm)) {
-            return; // Skip this exercise if it doesn't match
+            return;
         }
 
-        const listItem = document.createElement('div');
-        listItem.classList.add('exercise-item', 'mb-2', 'border', 'rounded', 'p-2');
+        const details = document.createElement('details');
+        details.classList.add('exercise-item', 'mb-2', 'border', 'rounded', 'p-2');
 
-        const heading = document.createElement('div');
-        heading.classList.add('cursor-pointer', 'font-bold', 'flex', 'justify-between', 'items-center'); // Make it clickable
-        heading.textContent = exercise.name;
-        listItem.appendChild(heading);
-
-        // Add a "+" or "-" icon
-        const toggleIcon = document.createElement('span');
-        toggleIcon.textContent = '+';
-        toggleIcon.classList.add('toggle-icon');
-        heading.appendChild(toggleIcon);
-
-
+        const summary = document.createElement('summary');
+        summary.classList.add('cursor-pointer', 'font-bold'); // Make it look clickable
+        summary.textContent = exercise.name;
+        details.appendChild(summary);
 
         const content = document.createElement('div');
-        content.classList.add('exercise-content', 'hidden', 'mt-2'); // Initially hidden
-        content.innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`; // Use innerHTML to render paragraphs
+        content.classList.add('mt-2'); // Add some margin
+        content.innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
 
         const editButton = document.createElement('button');
         editButton.textContent = 'Edit';
         editButton.type = 'button';
-        editButton.className = 'btn-base btn-primary mr-2'; // Use consistent styles
+        editButton.className = 'btn-base btn-primary mr-2';
         editButton.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent the accordion from toggling
+            // No stopPropagation needed!
             editExercise(exercise);
         });
         content.appendChild(editButton);
@@ -117,21 +109,15 @@ export function renderExerciseList() {
         const deleteButton = document.createElement('button');
         deleteButton.textContent = 'Delete';
         deleteButton.type = 'button';
-        deleteButton.className = 'btn-base btn-danger'; // Use consistent styles
+        deleteButton.className = 'btn-base btn-danger';
         deleteButton.addEventListener('click', (event) => {
-            event.stopPropagation(); // Prevent the accordion from toggling
+            // No stopPropagation needed!
             deleteExercise(exercise);
         });
         content.appendChild(deleteButton);
-        listItem.appendChild(content);
 
-        // Toggle visibility on heading click
-        heading.addEventListener('click', () => {
-            content.classList.toggle('hidden');
-            toggleIcon.textContent = content.classList.contains('hidden') ? '+' : '-'; // Update icon
-        });
-
-        listContainer.appendChild(listItem);
+        details.appendChild(content);
+        listContainer.appendChild(details);
     });
 }
 
