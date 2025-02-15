@@ -11,7 +11,7 @@
         @apply text-text-primary;
     }
     label {
-      @apply text-text-primary font-bold;
+        @apply text-text-primary font-bold;
     }
     /* Style for exercise description in details modal */
     #exerciseDetailsModal p {
@@ -33,7 +33,7 @@
     @apply bg-danger hover:bg-danger-hover text-white;
 }
 .btn-yellow {
-  @apply bg-accent hover:bg-accent-hover text-white;
+    @apply bg-accent hover:bg-accent-hover text-white;
 }
 
 .input-base {

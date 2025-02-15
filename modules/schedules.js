@@ -1,9 +1,10 @@
+// schedules.js
 import * as api from './api.js';
 import * as ui from './ui.js';
 
-export async function loadSchedule(group, yearWeek) { // Added group parameter
+export async function loadSchedule(group, yearWeek) {
     try {
-        const schedule = await api.getSchedule(group, yearWeek); // Pass group to API
+        const schedule = await api.getSchedule(group, yearWeek);
         if (schedule) {
             ui.populateScheduleForm(schedule);
         } else {
@@ -11,36 +12,37 @@ export async function loadSchedule(group, yearWeek) { // Added group parameter
         }
     } catch (error) {
         console.error("Error loading schedule:", error);
-        alert("Failed to load schedule.");
+        ui.showAlert("Failed to load schedule. Please try again."); // UI module
     }
 }
 
-export async function saveCurrentSchedule(group, yearWeek) { // Added group parameter
+export async function saveCurrentSchedule(group, yearWeek) {
     const scheduleData = ui.getScheduleFormData();
     try {
-        await api.updateSchedule(group, yearWeek, scheduleData); // Pass group to API
-        alert("Schedule saved successfully!");
-        loadSchedule(group, yearWeek); // Re-load to update dropdowns, pass group
+        await api.updateSchedule(group, yearWeek, scheduleData);
+        ui.showAlert("Schedule saved successfully!"); // UI module
+        loadSchedule(group, yearWeek); // Re-load, pass group
     } catch (error) {
         console.error("Error saving schedule:", error);
-        alert("Failed to save schedule.");
+        ui.showAlert("Failed to save schedule. Please try again."); // UI module
     }
 }
 
-export async function deleteSchedule(group, yearWeek) { // Added group parameter
-    if (confirm(`Are you sure you want to delete the schedule for week ${yearWeek}? This action cannot be undone.`)) {
+export async function deleteSchedule(group, yearWeek) {
+    const confirmDelete = await ui.showConfirm(`Are you sure you want to delete the schedule for week ${yearWeek}? This action cannot be undone.`); // UI module
+    if (confirmDelete) {
         try {
-            await api.deleteSchedule(group, yearWeek); // Pass group to API
-            alert("Schedule deleted successfully!");
+            await api.deleteSchedule(group, yearWeek);
+            ui.showAlert("Schedule deleted successfully!"); // UI module
             ui.clearScheduleForm();
         } catch (error) {
             console.error("Error deleting schedule:", error);
-            alert("Failed to delete schedule.");
+            ui.showAlert("Failed to delete schedule. Please try again."); // UI module
         }
     }
 }
 
-// Helper function to get year and week as an object
+// Helper function to get year and week
 function getYearWeek(year, week) {
     return {
         year: year,
@@ -50,14 +52,14 @@ function getYearWeek(year, week) {
 }
 
 export function getPreviousWeek(currentYearWeek) {
-    let [year, week] = currentYearWeek.split('-').map(Number); // Destructure and convert to numbers
+    let [year, week] = currentYearWeek.split('-').map(Number);
 
     week--;
     if (week < 1) {
         year--;
         week = 52; // Jump to week 52 of the *previous* year
     }
-    return getYearWeek(year, week).yearWeek; // Return in new format
+    return getYearWeek(year, week).yearWeek;
 }
 
 export function getNextWeek(currentYearWeek) {
@@ -66,7 +68,7 @@ export function getNextWeek(currentYearWeek) {
     week++;
     if (week > 52) {
         year++;
-        week = 1; // Jump to week 1 of the *next* year
+        week = 1;
     }
     return getYearWeek(year, week).yearWeek;
 }
@@ -99,16 +101,14 @@ export function calculateDateRange(yearWeek) {
     };
 }
 
-// Added Create Empty schedule Function
-export async function createEmptySchedule(group, yearWeek){ //Added group
+export async function createEmptySchedule(group, yearWeek){
     try {
-        await api.updateSchedule(group, yearWeek, {}); //Added group
-        alert(`Schedule added for week: ${yearWeek}`)
-        loadSchedule(group, yearWeek); //Added group
-        }
-
+        await api.updateSchedule(group, yearWeek, {});
+        ui.showAlert(`Schedule added for week: ${yearWeek}`); // UI module
+        loadSchedule(group, yearWeek);
+    }
     catch (error) {
-        console.error("Error loading schedule:", error);
-        alert("Failed to load schedule."); // Basic error handling
+        console.error("Error creating empty schedule:", error); // More specific error message
+        ui.showAlert("Failed to create empty schedule. Please try again."); // UI module
     }
 }

@@ -1,3 +1,4 @@
+// script.js
 import * as api from './modules/api.js';
 import * as ui from './modules/ui.js';
 import * as schedules from './modules/schedules.js';
@@ -9,23 +10,22 @@ function getCurrentWeek() {
     const now = new Date();
     const startOfYear = new Date(now.getFullYear(), 0, 1);
     const dayOfYear = Math.floor((now - startOfYear) / (24 * 60 * 60 * 1000));
-    let weekNumber = Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
+    let weekNumber = Math.ceil((dayOfYear + startOfYear.getDay()) / 7); // Removed + 1
     let year = now.getFullYear();
 
-    // Handle week 53 (it can belong to the previous year)
+// Handle week 53 (it can belong to the previous year)
     if (weekNumber === 0) {
-        const prevYearStart = new Date(now.getFullYear() - 1, 0, 1);
-        weekNumber = Math.ceil((dayOfYear + 365 + prevYearStart.getDay() + 1) / 7);
-        year = now.getFullYear() -1;
+      weekNumber = 52;
+      year = now.getFullYear() - 1;
     }
-     // Handle week 53 (it can belong to the next year)
-     if(weekNumber === 53){
-        const nextYearStart = new Date(now.getFullYear() + 1, 0, 1);
-        if(now >= nextYearStart){
+
+    if (weekNumber === 53) {
+        const firstDayOfNextYear = new Date(year + 1, 0, 1);
+        if (now >= new Date(firstDayOfNextYear - 3 * 24 * 60 * 60 * 1000)) {
             weekNumber = 1;
-            year = now.getFullYear() + 1;
+            year++;
         }
-     }
+    }
 
     return `${year}-${weekNumber}`; // Return in "YYYY-WW" format
 }
@@ -38,11 +38,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('loginBtn').addEventListener('click', async () => {
         const password = document.getElementById('password').value;
 
-        if (await auth.authenticateUser(null, password)) { // Pass null for username
-            ui.showGroupSelection(); // Show group selection after login
-            document.getElementById('authSection').classList.add('hidden'); // Hide login
-        } else {
-            alert('Invalid credentials');
+        try {
+            if (await auth.authenticateUser(null, password)) { // Pass null for username
+                ui.showGroupSelection(); // Show group selection
+                document.getElementById('authSection').classList.add('hidden');
+            } else {
+                ui.showAlert('Invalid credentials'); // Use UI module
+            }
+        } catch (error) {
+            ui.showAlert(error.message); // Display the error message from auth.js
         }
     });
 
@@ -54,17 +58,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Week Navigation ---
     document.getElementById('prevWeek').addEventListener('click', () => {
         currentWeek = schedules.getPreviousWeek(currentWeek);
-        loadAndDisplaySchedule(); // No group passed here - it's already set
+        loadAndDisplaySchedule(); // No group passed - it's already set
     });
 
     document.getElementById('nextWeek').addEventListener('click', () => {
         currentWeek = schedules.getNextWeek(currentWeek);
-        loadAndDisplaySchedule(); // No group passed here
+        loadAndDisplaySchedule(); // No group passed
     });
 
     // --- Schedule Saving and Deleting---
     document.getElementById('saveSchedule').addEventListener('click', () => {
-      schedules.saveCurrentSchedule(selectedGroup, currentWeek); // Pass group
+        schedules.saveCurrentSchedule(selectedGroup, currentWeek); // Pass group
     });
 
     document.getElementById('deleteSchedule').addEventListener('click', () => {
@@ -72,33 +76,40 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // --- Add Schedule Button ---
-     document.getElementById('addScheduleBtn').addEventListener('click', () => {
+    document.getElementById('addScheduleBtn').addEventListener('click', () => {
         addScheduleForCurrentWeek(selectedGroup, currentWeek); //Pass group
     });
 
-      // --- Exercise Management ---
+    // --- Exercise Management ---
     document.getElementById('manageExercisesBtn').addEventListener('click', () => {
-      exercises.showExercisesModal(); //show the modal
+        exercises.showExercisesModal(); //show the modal
     });
-      // --- Close Exercise Modal ---
+
+    // --- Close Exercise Modal ---
     document.getElementById('closeExercisesModal').addEventListener('click', () => {
-      ui.hideElement(document.getElementById('exercisesModal'))//close it by hiding it
+        ui.hideElement(document.getElementById('exercisesModal'))//close it by hiding it
     });
-      // --- Close Exercise Detail Modal ---
+
+    // --- Close Exercise Detail Modal ---
     document.getElementById('closeExerciseDetailsModal').addEventListener('click', () => {
-      ui.hideElement(document.getElementById('exerciseDetailsModal'))//close it by hiding it
+        ui.hideElement(document.getElementById('exerciseDetailsModal'))//close it by hiding it
     });
-      // --- Save New Exercise---
+     // --- Close Edit Exercise Modal ---
+     document.getElementById('closeEditExerciseModal').addEventListener('click', () => {
+        ui.hideElement(document.getElementById('editExerciseModal'))//close it by hiding it
+    });
+
+    // --- Save New Exercise---
     document.getElementById('saveNewExerciseButton').addEventListener('click', async () => {
-      exercises.saveNewExercise();
+        exercises.saveNewExercise();
     });
-      // --- Search Function ---
-    document.getElementById('exerciseSearch').addEventListener('input', () => {
-      exercises.renderExerciseList();
-    });
+
+    // --- Search Function ---
+    document.getElementById('exerciseSearch').addEventListener('input', exercises.renderExerciseList);
+
     // --- Change Group Button ---
     document.getElementById('changeGroupBtn').addEventListener('click', () => {
-        ui.showGroupSelection();      // Show group selection
+        ui.showGroupSelection();        // Show group selection
         ui.hideElement('appContent'); // Hide app content
         selectedGroup = null;          // Reset selected group
         currentWeek = getCurrentWeek();
@@ -107,12 +118,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Current Week Button ---
     document.getElementById('currentWeekBtn').addEventListener('click', () => {
         currentWeek = getCurrentWeek(); // Reset to current week
-        loadAndDisplaySchedule();       // Reload schedule
+        loadAndDisplaySchedule();         // Reload schedule
     });
-     // Load exercises and the current week's schedule initially
-     //await exercises.loadExercises(); Removed
-     //loadAndDisplaySchedule(currentWeek); Removed
-
 });
 
 // --- Helper function to select a group ---
@@ -122,32 +129,37 @@ async function selectGroup(group) {
     ui.showAppContent();
     ui.showLoadingIndicator();
     await exercises.loadExercises(); // Load exercises (they are shared)
-    loadAndDisplaySchedule(); // Load schedule for the selected group and current week
+    loadAndDisplaySchedule(); // Load schedule for the group and week
     ui.hideLoadingIndicator();
 
-    // --- Add click-outside-to-close functionality HERE ---
-    document.getElementById('exercisesModal').addEventListener('click', (event) => {
-        if (event.target.id === 'exercisesModal') {
-            ui.hideElement(document.getElementById('exercisesModal'));
-        }
-    });
+     //Click outside Modal
+    document.getElementById('exercisesModal').addEventListener('click', handleModalClickOutside);
+    document.getElementById('exerciseDetailsModal').addEventListener('click', handleModalClickOutside);
+    document.getElementById('editExerciseModal').addEventListener('click', handleModalClickOutside);
 
-    document.getElementById('exerciseDetailsModal').addEventListener('click', (event) => {
-        if (event.target.id === 'exerciseDetailsModal') {
-            ui.hideElement(document.getElementById('exerciseDetailsModal'));
-        }
-    });
+}
+
+// Function handles clicking outside modals to close.
+function handleModalClickOutside(event) {
+ if (event.target.id === 'exercisesModal') {
+        ui.hideElement(document.getElementById('exercisesModal'));
+    } else if (event.target.id === 'exerciseDetailsModal') {
+        ui.hideElement(document.getElementById('exerciseDetailsModal'));
+    }
+    else if (event.target.id === 'editExerciseModal') {
+        ui.hideElement(document.getElementById('editExerciseModal'));
+    }
 }
 
 async function loadAndDisplaySchedule() {
-    if (!selectedGroup) return; // Don't load if no group is selected
+    if (!selectedGroup) return; // Don't load if no group
     ui.showLoadingIndicator();
-    await schedules.loadSchedule(selectedGroup, currentWeek); // Pass group to loadSchedule
-    ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));  // Pass week number
+    await schedules.loadSchedule(selectedGroup, currentWeek);
+    ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));
     exercises.populateExerciseDropdowns();
     ui.hideLoadingIndicator();
 }
-//Add schedule function
-async function addScheduleForCurrentWeek(group, yearWeek){
+
+async function addScheduleForCurrentWeek(group, yearWeek) {
     await schedules.createEmptySchedule(group, yearWeek)
 }

@@ -23,24 +23,24 @@
         </div>
 
         <div id="appContent" class="hidden">
-             <div id="loadingIndicator" class="hidden flex justify-center items-center py-4">
-               <svg class="animate-spin h-5 w-5 mr-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
+            <div id="loadingIndicator" class="hidden flex justify-center items-center py-4">
+              <svg class="animate-spin h-5 w-5 mr-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
               <span>Loading...</span>
             </div>
             <div class="flex justify-between items-center mb-4">
                 <button type="button" id="prevWeek" class="btn-base btn-secondary">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                    </svg>
+                      </svg>
                 </button>
                 <span id="currentWeekDisplay" class="text-lg font-bold"></span>
                 <button type="button" id="nextWeek" class="btn-base btn-secondary">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                    </svg>
+                      </svg>
                 </button>
             </div>
 
@@ -89,7 +89,7 @@
                     <select id="cooldown" class="input-base"></select>
                     <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="cooldown">Details</button>
                 </div>
-                 <div class="schedule-item">
+                <div class="schedule-item">
                     <label for="leaders" class="block text-sm font-medium">Leaders</label>
                     <input type="text" id="leaders" class="input-base">
                 </div>
@@ -103,7 +103,7 @@
             <div id="exerciseDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
                 <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
                     <h3 id="exerciseDetailsName" class="text-lg font-medium mb-2"></h3>
-                    <p id="exerciseDetailsDescription" class="mb-4 whitespace-pre-wrap"></p>
+                    <div id="exerciseDetailsDescription" class="mb-4"></div>
                     <button type="button" id="closeExerciseDetailsModal" class="w-full btn-base btn-secondary">Close</button>
                 </div>
             </div>
@@ -116,24 +116,30 @@
                 <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
                     <h3 class="text-lg font-medium mb-4">Manage Exercises</h3>
 
-                    <!- Add New Exercise Form (Moved to Top) ->
                     <div class="mb-4">
                         <input type="text" id="newExerciseName" placeholder="Exercise Name" class="input-base mb-2">
-                        <input type="text" id="newExerciseDescription" placeholder="Description" class="input-base mb-2">
+                        <textarea id="newExerciseDescription" placeholder="Description" class="input-base mb-2" rows="4"></textarea>
                         <button type="button" id="saveNewExerciseButton" class="w-full btn-base btn-primary">Save</button>
                     </div>
 
-                    <!- Search Input ->
                     <input type="text" id="exerciseSearch" placeholder="Search Exercises..." class="input-base mb-4">
 
-                    <!- Exercise List (Accordion) ->
                     <div id="exerciseList" class="mb-4"></div>
 
                     <button type="button" id="closeExercisesModal" class="mt-4 w-full btn-base btn-secondary">Close</button>
                 </div>
             </div>
+            <div id="editExerciseModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+                <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
+                    <h3 class="text-lg font-medium mb-4">Edit Exercise</h3>
+                    <input type="text" id="editExerciseName" placeholder="Exercise Name" class="input-base mb-2 w-full">
+                    <textarea id="editExerciseDescription" placeholder="Description" class="input-base mb-2 w-full" rows="4"></textarea>
+                    <button type="button" id="saveEditedExerciseButton" class="btn-base btn-primary w-full">Save Changes</button>
+                    <button type="button" id="closeEditExerciseModal" class="btn-base btn-secondary w-full mt-2">Close</button>
+                </div>
+            </div>
+
         </div>
-    </div>
 
     <script type="module" src="script.js"></script>
 </body>

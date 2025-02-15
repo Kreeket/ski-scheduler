@@ -1,3 +1,4 @@
+// db.js
 const fs = require('fs').promises;
 const path = require('path');
 
@@ -20,12 +21,19 @@ async function readData(filename) {
                 return []; // Return an empty array for exercises and users
             }
         }
+        console.error(`Error reading ${filename}:`, error); // Log the error
         throw error; // Re-throw other errors
     }
 }
+
 async function writeData(filename, data) {
-    const filePath = getDataFilePath(filename);
-    await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
+    try{
+        const filePath = getDataFilePath(filename);
+        await fs.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
+    } catch (error){
+        console.error(`Error writing to ${filename}:`, error); // Log the error!
+        throw error; // Re-throw the error to be handled by the caller
+    }
 }
 
 module.exports = { readData, writeData };

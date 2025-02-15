@@ -1,14 +1,13 @@
-const API_BASE_URL = 'http://localhost:3000/api'; // Replace with your actual API URL
-
-// --- User Authentication ---
-
+// api.js (with exercise ID changes)
+const API_BASE_URL = 'http://localhost:3000/api'; // Use environment variable in production
 
 // --- Exercises ---
 
 export async function getExercises() {
     const response = await fetch(`${API_BASE_URL}/exercises`);
     if (!response.ok) {
-        throw new Error(`Failed to fetch exercises: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`Failed to fetch exercises: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
     return response.json();
 }
@@ -22,13 +21,14 @@ export async function createExercise(exerciseData) {
         body: JSON.stringify(exerciseData),
     });
     if (!response.ok) {
-        throw new Error(`Failed to create exercise: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`Failed to create exercise: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
     return response.json();
 }
 
 export async function updateExercise(id, exerciseData) {
-  const response = await fetch(`${API_BASE_URL}/exercises/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/exercises/${id}`, { // Use the ID in the URL
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -36,30 +36,32 @@ export async function updateExercise(id, exerciseData) {
     body: JSON.stringify(exerciseData),
   });
   if (!response.ok) {
-    throw new Error(`Failed to update exercise: ${response.status}`);
+      const errorData = await response.json();
+    throw new Error(`Failed to update exercise: ${response.status} - ${errorData.message || 'Unknown error'}`);
   }
   return response.json();
 }
 
 export async function deleteExercise(id) {
-    const response = await fetch(`${API_BASE_URL}/exercises/${id}`, {
+    const response = await fetch(`${API_BASE_URL}/exercises/${id}`, { // Use the ID in the URL
         method: 'DELETE',
     });
     if (!response.ok) {
-        throw new Error(`Failed to delete exercise: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`Failed to delete exercise: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
-    return response.json(); // Or just return response.ok if you don't need the data
+    return response.ok;
 }
 
-// --- Schedules ---
-// MODIFIED functions: now include group in the URL
+// --- Schedules --- (No changes here)
 export async function getSchedule(group, yearWeek) {
     const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`);
     if (!response.ok) {
         if (response.status === 404) {
             return null;
         }
-        throw new Error(`Failed to fetch schedule: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`Failed to fetch schedule: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
     return response.json();
 }
@@ -73,7 +75,8 @@ export async function updateSchedule(group, yearWeek, scheduleData) {
         body: JSON.stringify(scheduleData),
     });
     if (!response.ok) {
-        throw new Error(`Failed to update schedule: ${response.status}`);
+        const errorData = await response.json();
+        throw new Error(`Failed to update schedule: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
     return response.json();
 }
@@ -82,17 +85,18 @@ export async function deleteSchedule(group, yearWeek) {
     const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`, {
         method: 'DELETE',
     });
-     if (!response.ok) {
-        throw new Error(`Failed to fetch schedule: ${response.status}`);
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to delete schedule: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
-    return response.json();
+    return response.ok;
 }
-//get all schedules
-//Not used at the moment
+
 export async function getSchedules() {
     const response = await fetch(`${API_BASE_URL}/schedules`);
     if (!response.ok) {
-        throw new Error(`Failed to fetch schedules: ${response.status}`);
+      const errorData = await response.json();
+        throw new Error(`Failed to fetch schedules: ${response.status} - ${errorData.message || 'Unknown error'}`);
     }
     return response.json();
 }
