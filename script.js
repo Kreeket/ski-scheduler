@@ -12,19 +12,20 @@ function getCurrentWeek() {
     let weekNumber = Math.ceil((dayOfYear + startOfYear.getDay() + 1) / 7);
     let year = now.getFullYear();
 
-    // Handle week 53 (it can belong to the previous year or the next)
+    // Handle week 53 (it can belong to the previous year)
     if (weekNumber === 0) {
         const prevYearStart = new Date(now.getFullYear() - 1, 0, 1);
         weekNumber = Math.ceil((dayOfYear + 365 + prevYearStart.getDay() + 1) / 7);
-        year = now.getFullYear() - 1;
+        year = now.getFullYear() -1;
     }
-    if (weekNumber === 53) {
+     // Handle week 53 (it can belong to the next year)
+     if(weekNumber === 53){
         const nextYearStart = new Date(now.getFullYear() + 1, 0, 1);
-        if (now >= nextYearStart) {
+        if(now >= nextYearStart){
             weekNumber = 1;
             year = now.getFullYear() + 1;
         }
-    }
+     }
 
     return `${year}-${weekNumber}`; // Return in "YYYY-WW" format
 }
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('loginBtn').addEventListener('click', async () => {
         const password = document.getElementById('password').value;
 
-        if (await auth.authenticateUser(null, password)) {
+        if (await auth.authenticateUser(null, password)) { // Pass null for username
             ui.showGroupSelection(); // Show group selection after login
             document.getElementById('authSection').classList.add('hidden'); // Hide login
         } else {
@@ -95,6 +96,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('exerciseSearch').addEventListener('input', () => {
       exercises.renderExerciseList();
     });
+    // --- Change Group Button ---
+    document.getElementById('changeGroupBtn').addEventListener('click', () => {
+        ui.showGroupSelection();      // Show group selection
+        ui.hideElement('appContent'); // Hide app content
+        selectedGroup = null;          // Reset selected group
+        currentWeek = getCurrentWeek();
+    });
+
+    // --- Current Week Button ---
+    document.getElementById('currentWeekBtn').addEventListener('click', () => {
+        currentWeek = getCurrentWeek(); // Reset to current week
+        loadAndDisplaySchedule();       // Reload schedule
+    });
+     // Load exercises and the current week's schedule initially
+     //await exercises.loadExercises(); Removed
+     //loadAndDisplaySchedule(currentWeek); Removed
+
 });
 
 // --- Helper function to select a group ---
@@ -106,17 +124,29 @@ async function selectGroup(group) {
     await exercises.loadExercises(); // Load exercises (they are shared)
     loadAndDisplaySchedule(); // Load schedule for the selected group and current week
     ui.hideLoadingIndicator();
+
+    // --- Add click-outside-to-close functionality HERE ---
+    document.getElementById('exercisesModal').addEventListener('click', (event) => {
+        if (event.target.id === 'exercisesModal') {
+            ui.hideElement(document.getElementById('exercisesModal'));
+        }
+    });
+
+    document.getElementById('exerciseDetailsModal').addEventListener('click', (event) => {
+        if (event.target.id === 'exerciseDetailsModal') {
+            ui.hideElement(document.getElementById('exerciseDetailsModal'));
+        }
+    });
 }
 
 async function loadAndDisplaySchedule() {
     if (!selectedGroup) return; // Don't load if no group is selected
     ui.showLoadingIndicator();
     await schedules.loadSchedule(selectedGroup, currentWeek); // Pass group to loadSchedule
-    ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));
+    ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));  // Pass week number
     exercises.populateExerciseDropdowns();
     ui.hideLoadingIndicator();
 }
-
 //Add schedule function
 async function addScheduleForCurrentWeek(group, yearWeek){
     await schedules.createEmptySchedule(group, yearWeek)
