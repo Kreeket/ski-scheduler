@@ -1,101 +1,146 @@
 // ui.js
+import { getExerciseByName } from './exercises.js'; // Import
 
 export function updateWeekDisplay(weekNumber, dateRange) {
-  document.getElementById('currentWeekDisplay').textContent = `v${weekNumber} (${dateRange.formatted})`;
+    document.getElementById('currentWeekDisplay').textContent = `v${weekNumber} (${dateRange.formatted})`;
 }
 
 export function populateScheduleForm(schedule) {
-  const warmupSelect = document.getElementById('warmup');
-  const exercise1Select = document.getElementById('exercise1');
-  const exercise2Select = document.getElementById('exercise2');
-  const exercise3Select = document.getElementById('exercise3');
-  const mainActivitySelect = document.getElementById('mainActivity');
-  const cooldownSelect = document.getElementById('cooldown');
-  const leadersInput = document.getElementById('leaders');
+    const leadersInput = document.getElementById('leaders');
+    leadersInput.value = schedule.leaders || '';
 
-  // Set values, handling potential null values
-  warmupSelect.value = schedule.warmup || '';
-  exercise1Select.value = schedule.exercise1 || '';
-  exercise2Select.value = schedule.exercise2 || '';
-  exercise3Select.value = schedule.exercise3 || '';
-  mainActivitySelect.value = schedule.mainActivity || '';
-  cooldownSelect.value = schedule.cooldown || '';
-  leadersInput.value = schedule.leaders || '';
-  hideAddScheduleButton(); // Hide the "Add Schedule" button, show form
+    const dynamicExercisesContainer = document.getElementById('dynamicExercises');
+    dynamicExercisesContainer.innerHTML = '';
+
+    if (schedule.exercises && Array.isArray(schedule.exercises)) {
+        schedule.exercises.forEach(exerciseName => {
+            renderExercise(exerciseName); // Render read-only
+        });
+    }
+
+    hideAddScheduleButton();
+    // No exercises.populateExerciseDropdowns() call here!
+}
+
+export function renderExercise(exerciseName) {
+    const dynamicExercisesContainer = document.getElementById('dynamicExercises');
+
+    const exerciseDiv = document.createElement('div');
+    exerciseDiv.classList.add('schedule-item', 'flex', 'items-center', 'space-x-2');
+
+    // Display the exercise name as text
+    const exerciseNameSpan = document.createElement('span');
+    exerciseNameSpan.textContent = exerciseName;
+    exerciseNameSpan.classList.add('flex-grow'); // Make text take up available space
+
+    const detailsButton = document.createElement('button');
+    detailsButton.textContent = 'Details';
+    detailsButton.type = 'button';
+    detailsButton.classList.add('btn-base', 'btn-secondary', 'text-xs');
+    // Store exercise name on the details button for lookup
+    detailsButton.dataset.exerciseName = exerciseName;
+     detailsButton.addEventListener('click', (event) => {
+        const name = event.target.dataset.exerciseName;
+        const exercise = getExerciseByName(name); // Use the helper function
+        if (exercise) {
+            showExerciseDetails(exercise);
+        }
+    });
+
+
+    const removeButton = document.createElement('button');
+    removeButton.textContent = 'Remove';
+    removeButton.type = 'button';
+    removeButton.classList.add('btn-base', 'btn-danger', 'text-xs');
+    removeButton.addEventListener('click', () => {
+        exerciseDiv.remove();
+    });
+
+    exerciseDiv.appendChild(exerciseNameSpan); // Add the exercise name
+    exerciseDiv.appendChild(detailsButton);
+    exerciseDiv.appendChild(removeButton);
+    dynamicExercisesContainer.appendChild(exerciseDiv);
 }
 
 export function getScheduleFormData() {
-  return {
-      warmup: document.getElementById('warmup').value,
-      exercise1: document.getElementById('exercise1').value,
-      exercise2: document.getElementById('exercise2').value,
-      exercise3: document.getElementById('exercise3').value,
-      mainActivity: document.getElementById('mainActivity').value,
-      cooldown: document.getElementById('cooldown').value,
-      leaders: document.getElementById('leaders').value
-  };
+    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .schedule-item span'); // Get SPAN elements
+    const exercises = [];
+
+    dynamicExerciseElements.forEach(span => {
+        exercises.push(span.textContent); // Get text content (exercise name)
+    });
+
+    return {
+        exercises: exercises,
+        leaders: document.getElementById('leaders').value
+    };
 }
 
 export function clearScheduleForm() {
-  const fields = ['warmup', 'exercise1', 'exercise2', 'exercise3', 'mainActivity', 'cooldown', 'leaders'];
-  fields.forEach(field => {
-      const element = document.getElementById(field);
-      if (element.tagName === 'SELECT') {
-          element.value = ''; // Clear dropdowns
-      } else {
-          element.value = ''; // Clear other inputs (like leaders)
-      }
-  });
-  showAddScheduleButton(); // Show the "Add Schedule" button, hide form
+   document.getElementById('leaders').value = '';
+   document.getElementById('dynamicExercises').innerHTML = ''; // Clear
+   showAddScheduleButton();
 }
 
 export function showAppContent() {
-  document.getElementById('authSection').classList.add('hidden');
-  document.getElementById('appContent').classList.remove('hidden');
+    document.getElementById('authSection').classList.add('hidden');
+    document.getElementById('appContent').classList.remove('hidden');
 }
 
 export function hideElement(element) {
-  element.classList.add('hidden');
+    if (element) {
+        element.classList.add('hidden');
+    }
 }
 
 export function showElement(element) {
-  element.classList.remove('hidden');
+    if (element) {
+        element.classList.remove('hidden');
+    }
 }
 
 export function showLoadingIndicator() {
-  document.getElementById('loadingIndicator').classList.remove('hidden');
-  document.getElementById('scheduleContainer').classList.add('hidden'); //Hide form
-  hideAddScheduleButton(); // Hide the add schedule button, while loading
+    document.getElementById('loadingIndicator').classList.remove('hidden');
+    document.getElementById('scheduleContainer').classList.add('hidden');
+    hideAddScheduleButton();
 }
 
 export function hideLoadingIndicator() {
-  document.getElementById('loadingIndicator').classList.add('hidden');
-  //document.getElementById('scheduleContainer').classList.remove('hidden'); //Show form Removed
+    document.getElementById('loadingIndicator').classList.add('hidden');
 }
 
 export function showAddScheduleButton() {
-  document.getElementById('addScheduleForCurrentWeek').classList.remove('hidden');
-  document.getElementById('scheduleContainer').classList.add('hidden'); //hide the form
+    document.getElementById('addScheduleForCurrentWeek').classList.remove('hidden');
+    document.getElementById('scheduleContainer').classList.add('hidden');
 }
 
 export function hideAddScheduleButton() {
-  document.getElementById('addScheduleForCurrentWeek').classList.add('hidden');
-  document.getElementById('scheduleContainer').classList.remove('hidden'); //show the form
+    document.getElementById('addScheduleForCurrentWeek').classList.add('hidden');
+    document.getElementById('scheduleContainer').classList.remove('hidden');
 }
 
 export function showGroupSelection() {
-  document.getElementById('groupSelection').classList.remove('hidden');
+    document.getElementById('groupSelection').classList.remove('hidden');
 }
 
 export function hideGroupSelection() {
-  document.getElementById('groupSelection').classList.add('hidden');
+    document.getElementById('groupSelection').classList.add('hidden');
 }
 
-// --- Alert and Confirm functions (basic implementation) ---
 export function showAlert(message) {
-  alert(message); // Replace with a modal library (e.g., SweetAlert2) for a better UX
+    alert(message);
 }
 
 export async function showConfirm(message) {
-  return confirm(message); // Replace with a modal library for a better UX
+    return confirm(message);
+}
+
+export function showExerciseDetails(exercise) {
+    if (!exercise) {
+        console.error("showExerciseDetails called with null or undefined exercise");
+        return;
+    }
+    document.getElementById('exerciseDetailsName').textContent = exercise.name;
+    document.getElementById('exerciseDetailsDescription').innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
+    showElement(document.getElementById('exerciseDetailsModal'));
 }

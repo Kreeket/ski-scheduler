@@ -54,41 +54,13 @@
             </div>
 
             <div id="scheduleContainer" class="space-y-4 bg-card-bg rounded-lg shadow-md p-4">
-                <div class="schedule-item">
-                    <label for="warmup" class="block text-sm font-medium">Warm-up</label>
-                    <select id="warmup" class="input-base"></select>
-                    <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="warmup">Details</button>
-                </div>
+                <div id="dynamicExercises"></div>
 
                 <div class="schedule-item">
-                    <label for="exercise1" class="block text-sm font-medium">Exercise 1</label>
-                    <select id="exercise1" class="input-base"></select>
-                    <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="exercise1">Details</button>
+                   <select id="addExerciseSelect" class="input-base"></select>
+                    <button type="button" id="addExerciseBtn" class="btn-base btn-primary ml-2">Add</button>
                 </div>
 
-                <div class="schedule-item">
-                    <label for="exercise2" class="block text-sm font-medium">Exercise 2</label>
-                    <select id="exercise2" class="input-base"></select>
-                    <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="exercise2">Details</button>
-                </div>
-
-                <div class="schedule-item">
-                    <label for="exercise3" class="block text-sm font-medium">Exercise 3</label>
-                    <select id="exercise3" class="input-base"></select>
-                    <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="exercise3">Details</button>
-                </div>
-
-                <div class="schedule-item">
-                    <label for="mainActivity" class="block text-sm font-medium">Main Activity</label>
-                    <select id="mainActivity" class="input-base"></select>
-                    <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="mainActivity">Details</button>
-                </div>
-
-                <div class="schedule-item">
-                    <label for="cooldown" class="block text-sm font-medium">Cool-down</label>
-                    <select id="cooldown" class="input-base"></select>
-                    <button type="button" class="show-details-button btn-base btn-secondary text-xs mt-1" data-select-id="cooldown">Details</button>
-                </div>
                 <div class="schedule-item">
                     <label for="leaders" class="block text-sm font-medium">Leaders</label>
                     <input type="text" id="leaders" class="input-base">

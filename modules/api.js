@@ -1,4 +1,3 @@
-// api.js (with exercise ID changes)
 const API_BASE_URL = 'http://localhost:3000/api'; // Use environment variable in production
 
 // --- Exercises ---
@@ -28,7 +27,7 @@ export async function createExercise(exerciseData) {
 }
 
 export async function updateExercise(id, exerciseData) {
-  const response = await fetch(`${API_BASE_URL}/exercises/${id}`, { // Use the ID in the URL
+  const response = await fetch(`${API_BASE_URL}/exercises/${id}`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -43,7 +42,7 @@ export async function updateExercise(id, exerciseData) {
 }
 
 export async function deleteExercise(id) {
-    const response = await fetch(`${API_BASE_URL}/exercises/${id}`, { // Use the ID in the URL
+    const response = await fetch(`${API_BASE_URL}/exercises/${id}`, {
         method: 'DELETE',
     });
     if (!response.ok) {
@@ -53,7 +52,7 @@ export async function deleteExercise(id) {
     return response.ok;
 }
 
-// --- Schedules --- (No changes here)
+// --- Schedules ---
 export async function getSchedule(group, yearWeek) {
     const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`);
     if (!response.ok) {

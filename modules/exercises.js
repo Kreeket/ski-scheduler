@@ -8,7 +8,7 @@ export async function loadExercises() {
     ui.showLoadingIndicator();
     try {
         exercises = await api.getExercises();
-        populateExerciseDropdowns();
+        populateAddExerciseDropdown(); // Initial population
 
     } catch (error) {
         console.error('Error loading exercises:', error);
@@ -18,22 +18,24 @@ export async function loadExercises() {
     }
 }
 
-// Call this every time the schedule is switched or loaded.
-export function populateExerciseDropdowns() {
-    const dropdowns = document.querySelectorAll('#scheduleContainer select');
-    dropdowns.forEach(dropdown => {
-        const currentValue = dropdown.value; // Save current value
-        dropdown.innerHTML = '<option value="">Select an Exercise</option>';
+// --- Renamed and Simplified ---
+export function populateAddExerciseDropdown() {
+    const dropdown = document.getElementById('addExerciseSelect');
+    if (!dropdown) return; // Exit if dropdown doesn't exist
 
-        exercises.forEach(exercise => {
-            const option = document.createElement('option');
-            option.value = exercise.name; // Keep using name for the *value*
-            option.textContent = exercise.name;
-            dropdown.appendChild(option);
-        });
-        dropdown.value = currentValue; // Restore selected
+    dropdown.innerHTML = '<option value="">Select an Exercise</option>'; // Clear
+
+    exercises.forEach(exercise => {
+        const option = document.createElement('option');
+        option.value = exercise.name;
+        option.textContent = exercise.name;
+        dropdown.appendChild(option);
     });
-    addDetailsButtonListeners();
+}
+
+// --- NEW FUNCTION ---
+export function getExerciseByName(name) {
+    return exercises.find(ex => ex.name === name);
 }
 
 export async function saveNewExercise() {
@@ -51,12 +53,12 @@ export async function saveNewExercise() {
 
     try {
         const createdExercise = await api.createExercise(newExercise);
-        exercises.push(createdExercise); // Add the *entire* object (including ID)
-        populateExerciseDropdowns();
-        renderExerciseList();
-        document.getElementById('newExerciseName').value = '';
+        exercises.push(createdExercise);
+        populateAddExerciseDropdown(); // Update the "Add Exercise" dropdown
+        renderExerciseList();  // Update exercise list in modal
+        document.getElementById('newExerciseName').value = ''; // Clear
         document.getElementById('newExerciseDescription').value = '';
-        ui.hideElement(document.getElementById('exercisesModal'));
+        ui.hideElement(document.getElementById('exercisesModal')); // Close
         ui.showAlert('Exercise created successfully!');
     } catch (error) {
         console.error('Error creating exercise:', error);
@@ -97,7 +99,7 @@ export function renderExerciseList() {
         editButton.type = 'button';
         editButton.className = 'btn-base btn-primary mr-2';
         editButton.addEventListener('click', () => {
-            editExercise(exercise); // Pass the entire exercise object
+            editExercise(exercise);
         });
         content.appendChild(editButton);
 
@@ -106,7 +108,7 @@ export function renderExerciseList() {
         deleteButton.type = 'button';
         deleteButton.className = 'btn-base btn-danger';
         deleteButton.addEventListener('click', () => {
-            deleteExercise(exercise); // Pass the entire exercise object
+            deleteExercise(exercise);
         });
         content.appendChild(deleteButton);
 
@@ -121,11 +123,9 @@ function editExercise(exercise) {
         createEditExerciseModal();
         document.getElementById('editExerciseModal').addEventListener('click', handleModalClickOutside);
     }
-    // Populate the modal with exercise data
     document.getElementById('editExerciseName').value = exercise.name;
     document.getElementById('editExerciseDescription').value = exercise.description;
 
-    // Save button event listener (using exercise.id)
     document.getElementById('saveEditedExerciseButton').onclick = async () => {
         const newName = document.getElementById('editExerciseName').value.trim();
         let newDescription = document.getElementById('editExerciseDescription').value.trim();
@@ -138,7 +138,7 @@ function editExercise(exercise) {
         newDescription = newDescription.replace(/\n+/g, '\n\n');
 
         const updatedExercise = { name: newName, description: newDescription };
-        await updateExercise(exercise.id, updatedExercise); // Pass ID and updated data
+        await updateExercise(exercise.id, updatedExercise);
         ui.hideElement(document.getElementById('editExerciseModal'));
 
     };
@@ -146,7 +146,6 @@ function editExercise(exercise) {
     ui.showElement(document.getElementById('editExerciseModal'));
 }
 
-// Helper function to create the edit modal
 function createEditExerciseModal(){
     const modalHtml = `
         <div id="editExerciseModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
@@ -173,14 +172,13 @@ function handleModalClickOutside(event) {
     }
 }
 
-async function updateExercise(id, updatedExercise) { // Takes id as argument
+async function updateExercise(id, updatedExercise) {
     try {
-        const result = await api.updateExercise(id, updatedExercise); // Pass ID to API
-        // Find and update the exercise in the local array using the ID
+        const result = await api.updateExercise(id, updatedExercise);
         const index = exercises.findIndex(ex => ex.id === id);
         if (index !== -1) {
-            exercises[index] = { ...exercises[index], ...result }; // Keep ID, update other fields
-            populateExerciseDropdowns();
+            exercises[index] = { ...exercises[index], ...result };
+            populateAddExerciseDropdown(); // Update "Add Exercise" dropdown
             renderExerciseList();
             ui.showAlert("Exercise updated successfully!");
         }
@@ -194,9 +192,9 @@ async function deleteExercise(exercise) {
     const confirmDelete = await ui.showConfirm(`Are you sure you want to delete "${exercise.name}"?`);
     if (confirmDelete) {
         try {
-            await api.deleteExercise(exercise.id); // Pass ID to API
-            exercises = exercises.filter(ex => ex.id !== exercise.id); // Filter by ID
-            populateExerciseDropdowns();
+            await api.deleteExercise(exercise.id);
+            exercises = exercises.filter(ex => ex.id !== exercise.id);
+            populateAddExerciseDropdown(); // Update "Add Exercise" dropdown
             renderExerciseList();
             ui.showAlert("Exercise deleted successfully!");
         } catch (error) {
@@ -205,28 +203,12 @@ async function deleteExercise(exercise) {
         }
     }
 }
-
-function showExerciseDetails(exercise) {
+export function showExerciseDetails(exercise) {
+    if (!exercise) {
+        console.error("showExerciseDetails called with null or undefined exercise");
+        return;
+    }
     document.getElementById('exerciseDetailsName').textContent = exercise.name;
     document.getElementById('exerciseDetailsDescription').innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
     ui.showElement(document.getElementById('exerciseDetailsModal'));
-}
-
-function addDetailsButtonListeners() {
-    const detailsButtons = document.querySelectorAll('.show-details-button');
-    detailsButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const selectId = button.dataset.selectId;
-            const selectElement = document.getElementById(selectId);
-            const selectedExerciseName = selectElement.value;
-
-            if (selectedExerciseName) {
-                // Find exercise by NAME (still needed for dropdowns)
-                const exercise = exercises.find(ex => ex.name === selectedExerciseName);
-                if (exercise) {
-                    showExerciseDetails(exercise);
-                }
-            }
-        });
-    });
 }
