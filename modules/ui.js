@@ -1,6 +1,4 @@
 // ui.js
-// NO import statement for SweetAlert2 needed when using the UMD build and <script> tag
-
 import { getExerciseByName } from './exercises.js';
 
 export function updateWeekDisplay(weekNumber, dateRange) {
@@ -24,6 +22,7 @@ export function populateScheduleForm(schedule) {
     hideAddScheduleButton();
 }
 
+// --- renderExercise (Corrected) ---
 export function renderExercise(exerciseName, selectId) {
     const dynamicExercisesContainer = document.getElementById('dynamicExercises');
 
@@ -54,7 +53,7 @@ export function renderExercise(exerciseName, selectId) {
     removeButton.classList.add('btn-base', 'btn-danger', 'text-xs');
     removeButton.addEventListener('click', () => {
         exerciseDiv.remove();
-        exercises.populateAddExerciseDropdown(); //Update exercises
+        // --- REMOVED FROM HERE ---
     });
 
     exerciseDiv.appendChild(exerciseNameSpan);
@@ -63,6 +62,7 @@ export function renderExercise(exerciseName, selectId) {
     dynamicExercisesContainer.appendChild(exerciseDiv);
 }
 
+// --- getScheduleFormData ---
 export function getScheduleFormData() {
     const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .schedule-item span');
     const exercises = [];
@@ -101,15 +101,12 @@ export function showElement(element) {
 }
 
 export function showLoadingIndicator() {
-    document.getElementById('loadingIndicator').classList.remove('hidden');
-    document.getElementById('scheduleContainer').classList.add('hidden');
-    hideAddScheduleButton();
+    document.getElementById('loadingIndicatorWrapper').classList.remove('hidden');
 }
 
 export function hideLoadingIndicator() {
-    document.getElementById('loadingIndicator').classList.add('hidden');
+    document.getElementById('loadingIndicatorWrapper').classList.add('hidden');
 }
-
 export function showAddScheduleButton() {
     document.getElementById('addScheduleForCurrentWeek').classList.remove('hidden');
     document.getElementById('scheduleContainer').classList.add('hidden');
@@ -128,7 +125,6 @@ export function hideGroupSelection() {
     document.getElementById('groupSelection').classList.add('hidden');
 }
 
-// --- Use Swal directly (no import) ---
 export function showAlert(message, iconType = 'error') {
     Swal.fire({
         icon: iconType,
@@ -137,7 +133,6 @@ export function showAlert(message, iconType = 'error') {
     });
 }
 
-// --- Use Swal directly (no import) ---
 export async function showConfirm(message) {
     const result = await Swal.fire({
         icon: 'question',

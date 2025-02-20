@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ui.showGroupSelection();
                 document.getElementById('authSection').classList.add('hidden');
             } else {
-                ui.showAlert('Invalid credentials', 'error'); // ERROR icon
+                ui.showAlert('Invalid credentials', 'error');
             }
         } catch (error) {
-            ui.showAlert(error.message, 'error'); // ERROR icon - show specific error
+            ui.showAlert(error.message, 'error');
         }
     });
 
@@ -73,8 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('manageExercisesBtn').addEventListener('click', () => {
         exercises.showExercisesModal();
     });
-
-     // --- Close Exercise Modals ---
     document.getElementById('closeExercisesModal').addEventListener('click', () => {
         ui.hideElement(document.getElementById('exercisesModal'))
     });
@@ -103,13 +101,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadAndDisplaySchedule();
     });
 
+    // --- Add Exercise Button ---
     document.getElementById('addExerciseBtn').addEventListener('click', () => {
       const selectedExercise = document.getElementById('addExerciseSelect').value;
       if (selectedExercise) {
           ui.renderExercise(selectedExercise);
           document.getElementById('addExerciseSelect').value = ""; //Reset value
       } else {
-          ui.showAlert('Please select an exercise to add.', 'warning'); // Warning
+          ui.showAlert('Please select an exercise to add.', 'warning');
       }
     });
 });
@@ -139,7 +138,6 @@ function handleModalClickOutside(event) {
         ui.hideElement(document.getElementById('editExerciseModal'));
     }
 }
-
 async function loadAndDisplaySchedule() {
     if (!selectedGroup) return;
     ui.showLoadingIndicator();
@@ -147,13 +145,13 @@ async function loadAndDisplaySchedule() {
     try {
         await schedules.loadSchedule(selectedGroup, currentWeek);
         ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));
-        exercises.populateAddExerciseDropdown();
+        exercises.populateAddExerciseDropdown(); // Populate the "Add Exercise" dropdown
 
     } catch (error) {
-        ui.showAlert('Failed to load schedule. Please select a group and week.', 'error'); // Error
+        ui.showAlert('Failed to load schedule. Please select a group and week.', 'error');
         console.error("Error in loadAndDisplaySchedule:", error);
         ui.hideLoadingIndicator();
-        exercises.populateAddExerciseDropdown();
+        exercises.populateAddExerciseDropdown(); // Even on error, populate dropdown
         return;
     }
 
