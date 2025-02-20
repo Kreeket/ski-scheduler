@@ -12,14 +12,13 @@ export async function loadSchedule(group, yearWeek) {
         }
     } catch (error) {
         console.error("Error loading schedule:", error);
-        ui.showAlert("Failed to load schedule. Please try again.");
+        ui.showAlert("Failed to load schedule. Please try again.", 'error'); // ERROR icon
     }
 }
 
 export async function saveCurrentSchedule(group, yearWeek) {
     const scheduleData = ui.getScheduleFormData();
 
-    // Transform data for the backend
     const exercisesForBackend = scheduleData.exercises.map(item => item.exerciseName ? item.exerciseName : item);
     const dataToSave = {
         exercises: exercisesForBackend,
@@ -28,11 +27,11 @@ export async function saveCurrentSchedule(group, yearWeek) {
 
     try {
         await api.updateSchedule(group, yearWeek, dataToSave);
-        ui.showAlert("Schedule saved successfully!");
+        ui.showAlert("Schedule saved successfully!", 'success'); // SUCCESS icon
         loadSchedule(group, yearWeek); // Re-load
     } catch (error) {
         console.error("Error saving schedule:", error);
-        ui.showAlert("Failed to save schedule. Please try again.");
+        ui.showAlert("Failed to save schedule. Please try again.", 'error'); // ERROR icon
     }
 }
 
@@ -41,16 +40,16 @@ export async function deleteSchedule(group, yearWeek) {
     if (confirmDelete) {
         try {
             await api.deleteSchedule(group, yearWeek);
-            ui.showAlert("Schedule deleted successfully!");
+            ui.showAlert("Schedule deleted successfully!", 'success'); // SUCCESS icon
             ui.clearScheduleForm();
         } catch (error) {
             console.error("Error deleting schedule:", error);
-            ui.showAlert("Failed to delete schedule. Please try again.");
+            ui.showAlert("Failed to delete schedule. Please try again.", 'error'); // ERROR icon
         }
     }
 }
 
-// Helper function
+// Helper function (no changes)
 function getYearWeek(year, week) {
     return {
         year: year,
@@ -108,15 +107,14 @@ export function calculateDateRange(yearWeek) {
         formatted: `${start} - ${end} ${year}`
     };
 }
-
 export async function createEmptySchedule(group, yearWeek){
     try {
         await api.updateSchedule(group, yearWeek, { exercises: [], leaders: "" });
-        ui.showAlert(`Schedule added for week: ${yearWeek}`);
+        ui.showAlert(`Schedule added for week: ${yearWeek}`, 'success'); //Changed to success
         loadSchedule(group, yearWeek);
     }
     catch (error) {
         console.error("Error creating empty schedule:", error);
-        ui.showAlert("Failed to create empty schedule. Please try again.");
+        ui.showAlert("Failed to create empty schedule. Please try again.", 'error'); // ERROR icon
     }
 }

@@ -1,3 +1,4 @@
+// script.js
 import * as api from './modules/api.js';
 import * as ui from './modules/ui.js';
 import * as schedules from './modules/schedules.js';
@@ -36,10 +37,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ui.showGroupSelection();
                 document.getElementById('authSection').classList.add('hidden');
             } else {
-                ui.showAlert('Invalid credentials');
+                ui.showAlert('Invalid credentials', 'error'); // ERROR icon
             }
         } catch (error) {
-            ui.showAlert(error.message);
+            ui.showAlert(error.message, 'error'); // ERROR icon - show specific error
         }
     });
 
@@ -73,6 +74,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         exercises.showExercisesModal();
     });
 
+     // --- Close Exercise Modals ---
     document.getElementById('closeExercisesModal').addEventListener('click', () => {
         ui.hideElement(document.getElementById('exercisesModal'))
     });
@@ -101,14 +103,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadAndDisplaySchedule();
     });
 
-    // --- Add Exercise Button ---
     document.getElementById('addExerciseBtn').addEventListener('click', () => {
       const selectedExercise = document.getElementById('addExerciseSelect').value;
       if (selectedExercise) {
           ui.renderExercise(selectedExercise);
           document.getElementById('addExerciseSelect').value = ""; //Reset value
       } else {
-          ui.showAlert('Please select an exercise to add.');
+          ui.showAlert('Please select an exercise to add.', 'warning'); // Warning
       }
     });
 });
@@ -118,13 +119,14 @@ async function selectGroup(group) {
     ui.hideGroupSelection();
     ui.showAppContent();
     ui.showLoadingIndicator();
-    await exercises.loadExercises(); // Load exercises *first*
-    await loadAndDisplaySchedule();  // *Then* load and display the schedule
+    await exercises.loadExercises();
+    await loadAndDisplaySchedule();
     ui.hideLoadingIndicator();
 
     document.getElementById('exercisesModal').addEventListener('click', handleModalClickOutside);
     document.getElementById('exerciseDetailsModal').addEventListener('click', handleModalClickOutside);
     document.getElementById('editExerciseModal').addEventListener('click', handleModalClickOutside);
+
 }
 
 function handleModalClickOutside(event) {
@@ -138,25 +140,23 @@ function handleModalClickOutside(event) {
     }
 }
 
-// --- CORRECTED loadAndDisplaySchedule ---
 async function loadAndDisplaySchedule() {
     if (!selectedGroup) return;
     ui.showLoadingIndicator();
 
     try {
-        await schedules.loadSchedule(selectedGroup, currentWeek);  // Load the schedule data
+        await schedules.loadSchedule(selectedGroup, currentWeek);
         ui.updateWeekDisplay(currentWeek.split('-')[1], schedules.calculateDateRange(currentWeek));
+        exercises.populateAddExerciseDropdown();
 
     } catch (error) {
-        ui.showAlert('Failed to load schedule.');
+        ui.showAlert('Failed to load schedule. Please select a group and week.', 'error'); // Error
         console.error("Error in loadAndDisplaySchedule:", error);
         ui.hideLoadingIndicator();
-        // Even on error, populate dropdown
         exercises.populateAddExerciseDropdown();
         return;
     }
-    // Always populate the "Add Exercise" dropdown AFTER loading (or failing to load)
-    exercises.populateAddExerciseDropdown();
+
     ui.hideLoadingIndicator();
 }
 

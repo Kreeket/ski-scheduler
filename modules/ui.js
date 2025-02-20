@@ -1,5 +1,7 @@
 // ui.js
-import { getExerciseByName } from './exercises.js'; // Import
+// NO import statement for SweetAlert2 needed when using the UMD build and <script> tag
+
+import { getExerciseByName } from './exercises.js';
 
 export function updateWeekDisplay(weekNumber, dateRange) {
     document.getElementById('currentWeekDisplay').textContent = `v${weekNumber} (${dateRange.formatted})`;
@@ -14,34 +16,32 @@ export function populateScheduleForm(schedule) {
 
     if (schedule.exercises && Array.isArray(schedule.exercises)) {
         schedule.exercises.forEach(exerciseName => {
-            renderExercise(exerciseName); // Render read-only
+            const selectId = `dynamicSelect-${Date.now()}`;
+            renderExercise(exerciseName, selectId);
         });
     }
 
     hideAddScheduleButton();
-    // No exercises.populateExerciseDropdowns() call here!
 }
 
-export function renderExercise(exerciseName) {
+export function renderExercise(exerciseName, selectId) {
     const dynamicExercisesContainer = document.getElementById('dynamicExercises');
 
     const exerciseDiv = document.createElement('div');
     exerciseDiv.classList.add('schedule-item', 'flex', 'items-center', 'space-x-2');
 
-    // Display the exercise name as text
     const exerciseNameSpan = document.createElement('span');
     exerciseNameSpan.textContent = exerciseName;
-    exerciseNameSpan.classList.add('flex-grow'); // Make text take up available space
+    exerciseNameSpan.classList.add('flex-grow');
 
     const detailsButton = document.createElement('button');
     detailsButton.textContent = 'Details';
     detailsButton.type = 'button';
     detailsButton.classList.add('btn-base', 'btn-secondary', 'text-xs');
-    // Store exercise name on the details button for lookup
     detailsButton.dataset.exerciseName = exerciseName;
      detailsButton.addEventListener('click', (event) => {
         const name = event.target.dataset.exerciseName;
-        const exercise = getExerciseByName(name); // Use the helper function
+        const exercise = getExerciseByName(name);
         if (exercise) {
             showExerciseDetails(exercise);
         }
@@ -54,20 +54,21 @@ export function renderExercise(exerciseName) {
     removeButton.classList.add('btn-base', 'btn-danger', 'text-xs');
     removeButton.addEventListener('click', () => {
         exerciseDiv.remove();
+        exercises.populateAddExerciseDropdown(); //Update exercises
     });
 
-    exerciseDiv.appendChild(exerciseNameSpan); // Add the exercise name
+    exerciseDiv.appendChild(exerciseNameSpan);
     exerciseDiv.appendChild(detailsButton);
     exerciseDiv.appendChild(removeButton);
     dynamicExercisesContainer.appendChild(exerciseDiv);
 }
 
 export function getScheduleFormData() {
-    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .schedule-item span'); // Get SPAN elements
+    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .schedule-item span');
     const exercises = [];
 
     dynamicExerciseElements.forEach(span => {
-        exercises.push(span.textContent); // Get text content (exercise name)
+        exercises.push(span.textContent);
     });
 
     return {
@@ -78,7 +79,7 @@ export function getScheduleFormData() {
 
 export function clearScheduleForm() {
    document.getElementById('leaders').value = '';
-   document.getElementById('dynamicExercises').innerHTML = ''; // Clear
+   document.getElementById('dynamicExercises').innerHTML = '';
    showAddScheduleButton();
 }
 
@@ -127,12 +128,26 @@ export function hideGroupSelection() {
     document.getElementById('groupSelection').classList.add('hidden');
 }
 
-export function showAlert(message) {
-    alert(message);
+// --- Use Swal directly (no import) ---
+export function showAlert(message, iconType = 'error') {
+    Swal.fire({
+        icon: iconType,
+        title: 'Alert',
+        text: message,
+    });
 }
 
+// --- Use Swal directly (no import) ---
 export async function showConfirm(message) {
-    return confirm(message);
+    const result = await Swal.fire({
+        icon: 'question',
+        title: 'Confirm',
+        text: message,
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No',
+    });
+    return result.isConfirmed;
 }
 
 export function showExerciseDetails(exercise) {

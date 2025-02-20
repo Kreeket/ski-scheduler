@@ -8,22 +8,21 @@ export async function loadExercises() {
     ui.showLoadingIndicator();
     try {
         exercises = await api.getExercises();
-        populateAddExerciseDropdown(); // Initial population
+        populateAddExerciseDropdown();
 
     } catch (error) {
         console.error('Error loading exercises:', error);
-        ui.showAlert('Failed to load exercises. Please try again later.');
+        ui.showAlert('Failed to load exercises. Please try again later.', 'error'); // ERROR icon
     } finally {
         ui.hideLoadingIndicator();
     }
 }
 
-// --- Renamed and Simplified ---
 export function populateAddExerciseDropdown() {
     const dropdown = document.getElementById('addExerciseSelect');
-    if (!dropdown) return; // Exit if dropdown doesn't exist
+    if (!dropdown) return;
 
-    dropdown.innerHTML = '<option value="">Select an Exercise</option>'; // Clear
+    dropdown.innerHTML = '<option value="">Select an Exercise</option>';
 
     exercises.forEach(exercise => {
         const option = document.createElement('option');
@@ -33,7 +32,6 @@ export function populateAddExerciseDropdown() {
     });
 }
 
-// --- NEW FUNCTION ---
 export function getExerciseByName(name) {
     return exercises.find(ex => ex.name === name);
 }
@@ -43,7 +41,7 @@ export async function saveNewExercise() {
     let description = document.getElementById('newExerciseDescription').value.trim();
 
     if (!name) {
-        ui.showAlert('Please enter an exercise name.');
+        ui.showAlert('Please enter an exercise name.', 'error'); // ERROR icon
         return;
     }
 
@@ -54,15 +52,15 @@ export async function saveNewExercise() {
     try {
         const createdExercise = await api.createExercise(newExercise);
         exercises.push(createdExercise);
-        populateAddExerciseDropdown(); // Update the "Add Exercise" dropdown
-        renderExerciseList();  // Update exercise list in modal
-        document.getElementById('newExerciseName').value = ''; // Clear
+        populateAddExerciseDropdown();
+        renderExerciseList();
+        document.getElementById('newExerciseName').value = '';
         document.getElementById('newExerciseDescription').value = '';
-        ui.hideElement(document.getElementById('exercisesModal')); // Close
-        ui.showAlert('Exercise created successfully!');
+        ui.hideElement(document.getElementById('exercisesModal'));
+        ui.showAlert('Exercise created successfully!', 'success'); // SUCCESS icon
     } catch (error) {
         console.error('Error creating exercise:', error);
-        ui.showAlert('Failed to create exercise. Please try again.');
+        ui.showAlert('Failed to create exercise. Please try again.', 'error'); // ERROR icon
     }
 }
 
@@ -131,7 +129,7 @@ function editExercise(exercise) {
         let newDescription = document.getElementById('editExerciseDescription').value.trim();
 
           if (!newName) {
-            ui.showAlert('Please enter an exercise name.');
+            ui.showAlert('Please enter an exercise name.', 'error'); // ERROR icon
             return;
         }
         newDescription = newDescription.replace(/\n\s*\n/g, '\n\n');
@@ -178,13 +176,13 @@ async function updateExercise(id, updatedExercise) {
         const index = exercises.findIndex(ex => ex.id === id);
         if (index !== -1) {
             exercises[index] = { ...exercises[index], ...result };
-            populateAddExerciseDropdown(); // Update "Add Exercise" dropdown
+            populateAddExerciseDropdown();
             renderExerciseList();
-            ui.showAlert("Exercise updated successfully!");
+            ui.showAlert("Exercise updated successfully!", 'success'); // Success
         }
     } catch (error) {
         console.error("Error updating exercise:", error);
-        ui.showAlert("Failed to update exercise. Please try again.");
+        ui.showAlert("Failed to update exercise. Please try again.", 'error'); // Error
     }
 }
 
@@ -194,12 +192,12 @@ async function deleteExercise(exercise) {
         try {
             await api.deleteExercise(exercise.id);
             exercises = exercises.filter(ex => ex.id !== exercise.id);
-            populateAddExerciseDropdown(); // Update "Add Exercise" dropdown
+            populateAddExerciseDropdown();
             renderExerciseList();
-            ui.showAlert("Exercise deleted successfully!");
+            ui.showAlert("Exercise deleted successfully!", 'success'); // Success
         } catch (error) {
             console.error("Error deleting exercise:", error);
-            ui.showAlert("Failed to delete exercise. Please try again.");
+            ui.showAlert("Failed to delete exercise. Please try again.", 'error'); // Error
         }
     }
 }
