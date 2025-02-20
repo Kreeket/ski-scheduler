@@ -20,6 +20,7 @@ module.exports = {
         'accent-hover': '#e8a84d', //Deeper yellow
         'success' : '#16a34a',
         'card-bg': '#e2e8f0', // Light gray for card background (Tailwind's gray-200)
+        'body-bg': '#16a34a',
       }
     },
   },

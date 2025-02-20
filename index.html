@@ -8,22 +8,22 @@
     <script src="modules/ext_libs/sweetalert2.all.min.js"></script>
 </head>
 <body>
-    <div class="container mx-auto p-4">
-        <h1 class="text-2xl font-bold text-center mb-4">Ski Training</h1>
+    <div class="bg-secondary min-h-screen">  <div class="container mx-auto p-4">
+            <h1 class="text-2xl font-bold text-center mb-4">Ski Training</h1>
 
-        <div id="authSection" class="mb-4">
-            <input type="password" id="password" placeholder="Password" class="input-base mb-2">
-            <button type="button" id="loginBtn" class="w-full btn-base btn-primary">Login</button>
-        </div>
+            <div id="authSection" class="mb-4">
+                <input type="password" id="password" placeholder="Password" class="input-base mb-2">
+                <button type="button" id="loginBtn" class="w-full btn-base btn-primary">Login</button>
+            </div>
 
-        <div id="groupSelection" class="mb-4 hidden">
-            <h2 class="text-lg font-semibold mb-2">Select Group:</h2>
-            <button type="button" id="group1Btn" class="group-button btn-base btn-primary mr-2">Group 1</button>
-            <button type="button" id="group2Btn" class="group-button btn-base btn-primary mr-2">Group 2</button>
-            <button type="button" id="group3Btn" class="group-button btn-base btn-primary">Group 3</button>
-        </div>
+            <div id="groupSelection" class="mb-4 hidden">
+                <h2 class="text-lg font-semibold mb-2">Select Group:</h2>
+                <button type="button" id="group1Btn" class="group-button btn-base btn-primary mr-2">Group 1</button>
+                <button type="button" id="group2Btn" class="group-button btn-base btn-primary mr-2">Group 2</button>
+                <button type="button" id="group3Btn" class="group-button btn-base btn-primary">Group 3</button>
+            </div>
 
-        <div id="appContent" class="hidden">
+            <div id="appContent" class="hidden">
             <div id="loadingIndicatorWrapper" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
                 <div id="loadingIndicator" class="flex justify-center items-center py-4">
                   <svg class="animate-spin h-5 w-5 mr-3 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -33,89 +33,89 @@
                   <span>Loading...</span>
                 </div>
             </div>
-            <div class="flex justify-between items-center mb-4">
-                <button type="button" id="prevWeek" class="btn-base btn-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                      </svg>
-                </button>
-                <span id="currentWeekDisplay" class="text-lg font-bold"></span>
-                <button type="button" id="nextWeek" class="btn-base btn-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                      </svg>
-                </button>
-            </div>
-
-            <div class="flex justify-between mb-4">
-                <button type="button" id="changeGroupBtn" class="btn-base btn-secondary">Change Group</button>
-                <button type="button" id="currentWeekBtn" class="btn-base btn-secondary">Current Week</button>
-            </div>
-
-            <div id="addScheduleForCurrentWeek" class="hidden">
-                <button type="button" id="addScheduleBtn" class="w-full btn-base btn-primary">Add Schedule for This Week</button>
-            </div>
-
-            <div id="scheduleContainer" class="space-y-4 bg-card-bg rounded-lg shadow-md p-4">
-                <div id="dynamicExercises">
-                    </div>
-                <div class="schedule-item">
-                   <select id="addExerciseSelect" class="input-base"></select>
-                    <button type="button" id="addExerciseBtn" class="btn-base btn-primary ml-2">Add</button>
+                <div class="flex justify-between items-center mb-4">
+                    <button type="button" id="prevWeek" class="btn-base btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
+                          </svg>
+                    </button>
+                    <span id="currentWeekDisplay" class="text-lg font-bold"></span>
+                    <button type="button" id="nextWeek" class="btn-base btn-secondary">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
+                          </svg>
+                    </button>
                 </div>
 
-                <div class="schedule-item">
-                    <label for="leaders" class="block text-sm font-medium">Leaders</label>
-                    <input type="text" id="leaders" class="input-base">
+                <div class="flex justify-between mb-4">
+                    <button type="button" id="changeGroupBtn" class="btn-base btn-secondary">Change Group</button>
+                    <button type="button" id="currentWeekBtn" class="btn-base btn-secondary">Current Week</button>
                 </div>
 
-                <div class="flex space-x-2">
-                    <button type="button" id="saveSchedule" class="flex-1 btn-base btn-primary">Save</button>
-                    <button type="button" id="deleteSchedule" class="flex-1 btn-base btn-danger">Delete</button>
+                <div id="addScheduleForCurrentWeek" class="hidden">
+                    <button type="button" id="addScheduleBtn" class="w-full btn-base btn-primary">Add Schedule for This Week</button>
                 </div>
-            </div>
 
-            <div id="exerciseDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
-                <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
-                    <h3 id="exerciseDetailsName" class="text-lg font-medium mb-2"></h3>
-                    <div id="exerciseDetailsDescription" class="mb-4"></div>
-                    <button type="button" id="closeExerciseDetailsModal" class="w-full btn-base btn-secondary">Close</button>
-                </div>
-            </div>
-
-            <div class="flex justify-center items-center mt-4">
-              <button type="button" id="manageExercisesBtn" class="w-full btn-base btn-yellow">Manage Exercises</button>
-            </div>
-
-            <div id="exercisesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
-                <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
-                    <h3 class="text-lg font-medium mb-4">Manage Exercises</h3>
-
-                    <div class="mb-4">
-                        <input type="text" id="newExerciseName" placeholder="Exercise Name" class="input-base mb-2">
-                        <textarea id="newExerciseDescription" placeholder="Description" class="input-base mb-2" rows="4"></textarea>
-                        <button type="button" id="saveNewExerciseButton" class="w-full btn-base btn-primary">Save</button>
+                <div id="scheduleContainer" class="space-y-4 bg-card-bg rounded-lg shadow-md p-4">
+                    <div id="dynamicExercises">
+                        </div>
+                    <div class="schedule-item">
+                       <select id="addExerciseSelect" class="input-base"></select>
+                        <button type="button" id="addExerciseBtn" class="btn-base btn-primary ml-2">Add</button>
                     </div>
 
-                    <input type="text" id="exerciseSearch" placeholder="Search Exercises..." class="input-base mb-4">
+                    <div class="schedule-item">
+                        <label for="leaders" class="block text-sm font-medium">Leaders</label>
+                        <input type="text" id="leaders" class="input-base">
+                    </div>
 
-                    <div id="exerciseList" class="mb-4"></div>
-
-                    <button type="button" id="closeExercisesModal" class="mt-4 w-full btn-base btn-secondary">Close</button>
+                    <div class="flex space-x-2">
+                        <button type="button" id="saveSchedule" class="flex-1 btn-base btn-primary">Save</button>
+                        <button type="button" id="deleteSchedule" class="flex-1 btn-base btn-danger">Delete</button>
+                    </div>
                 </div>
-            </div>
-            <div id="editExerciseModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
-                <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
-                    <h3 class="text-lg font-medium mb-4">Edit Exercise</h3>
-                    <input type="text" id="editExerciseName" placeholder="Exercise Name" class="input-base mb-2 w-full">
-                    <textarea id="editExerciseDescription" placeholder="Description" class="input-base mb-2 w-full" rows="4"></textarea>
-                    <button type="button" id="saveEditedExerciseButton" class="btn-base btn-primary w-full">Save Changes</button>
-                    <button type="button" id="closeEditExerciseModal" class="btn-base btn-secondary w-full mt-2">Close</button>
-                </div>
-            </div>
 
+                <div id="exerciseDetailsModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+                    <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
+                        <h3 id="exerciseDetailsName" class="text-lg font-medium mb-2"></h3>
+                        <div id="exerciseDetailsDescription" class="mb-4"></div>
+                        <button type="button" id="closeExerciseDetailsModal" class="w-full btn-base btn-secondary">Close</button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center items-center mt-4">
+                  <button type="button" id="manageExercisesBtn" class="w-full btn-base btn-yellow">Manage Exercises</button>
+                </div>
+
+                <div id="exercisesModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+                    <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
+                        <h3 class="text-lg font-medium mb-4">Manage Exercises</h3>
+
+                        <div class="mb-4">
+                            <input type="text" id="newExerciseName" placeholder="Exercise Name" class="input-base mb-2">
+                            <textarea id="newExerciseDescription" placeholder="Description" class="input-base mb-2" rows="4"></textarea>
+                            <button type="button" id="saveNewExerciseButton" class="w-full btn-base btn-primary">Save</button>
+                        </div>
+
+                        <input type="text" id="exerciseSearch" placeholder="Search Exercises..." class="input-base mb-4">
+
+                        <div id="exerciseList" class="mb-4"></div>
+
+                        <button type="button" id="closeExercisesModal" class="mt-4 w-full btn-base btn-secondary">Close</button>
+                    </div>
+                </div>
+                <div id="editExerciseModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
+                    <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
+                        <h3 class="text-lg font-medium mb-4">Edit Exercise</h3>
+                        <input type="text" id="editExerciseName" placeholder="Exercise Name" class="input-base mb-2 w-full">
+                        <textarea id="editExerciseDescription" placeholder="Description" class="input-base mb-2 w-full" rows="4"></textarea>
+                        <button type="button" id="saveEditedExerciseButton" class="btn-base btn-primary w-full">Save Changes</button>
+                        <button type="button" id="closeEditExerciseModal" class="btn-base btn-secondary w-full mt-2">Close</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-
     <script type="module" src="script.js"></script>
 </body>
 </html>

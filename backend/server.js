@@ -1,15 +1,15 @@
-// server.js (with exercise ID changes)
+// server.js (Final version with robust bcrypt handling)
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { readData, writeData } = require('./db.js');
 const bcrypt = require('bcryptjs');
-const { v4: uuidv4 } = require('uuid'); // Import uuid
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-// CORS Configuration (as corrected previously)
+// CORS Configuration
 const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:8080', 'https://your-production-domain.com'];
 
 app.use(cors({
@@ -28,7 +28,7 @@ app.use(express.json());
 
 // --- API Endpoints ---
 
-// Exercises
+// Exercises (No changes)
 app.get('/api/exercises', async (req, res) => {
   try {
     const exercises = await readData('exercises.json');
@@ -48,7 +48,7 @@ app.post('/api/exercises', async (req, res) => {
       return res.status(400).json({ message: 'Exercise name and description are required.' });
     }
 
-    const newExercise = { id: uuidv4(), name, description }; // Add a unique ID
+    const newExercise = { id: uuidv4(), name, description };
     exercises.push(newExercise);
     await writeData('exercises.json', exercises);
     res.status(201).json(newExercise);
@@ -60,7 +60,7 @@ app.post('/api/exercises', async (req, res) => {
 
 app.put('/api/exercises/:id', async (req, res) => {
   try {
-    const exerciseId = req.params.id; // Use the ID from the URL
+    const exerciseId = req.params.id;
     const { name, description } = req.body;
 
     if (!name || !description) {
@@ -68,13 +68,12 @@ app.put('/api/exercises/:id', async (req, res) => {
     }
 
     const exercises = await readData('exercises.json');
-    const exerciseIndex = exercises.findIndex(ex => ex.id === exerciseId); // Find by ID
+    const exerciseIndex = exercises.findIndex(ex => ex.id === exerciseId);
 
     if (exerciseIndex === -1) {
       return res.status(404).json({ message: 'Exercise not found' });
     }
 
-    // Keep the existing ID, only update name and description
     exercises[exerciseIndex] = { ...exercises[exerciseIndex], name, description };
 
     await writeData('exercises.json', exercises);
@@ -87,9 +86,9 @@ app.put('/api/exercises/:id', async (req, res) => {
 
 app.delete('/api/exercises/:id', async (req, res) => {
   try {
-    const exerciseId = req.params.id; // Use the ID from the URL
+    const exerciseId = req.params.id;
     const exercises = await readData('exercises.json');
-    const exerciseIndex = exercises.findIndex(ex => ex.id === exerciseId); // Find by ID
+    const exerciseIndex = exercises.findIndex(ex => ex.id === exerciseId);
 
     if (exerciseIndex === -1) {
       return res.status(404).json({ message: 'Exercise not found' });
@@ -104,7 +103,7 @@ app.delete('/api/exercises/:id', async (req, res) => {
   }
 });
 
-// --- Schedules --- (No changes here)
+// Schedules (No changes)
 app.get('/api/schedules/:group/:yearWeek', async (req, res) => {
   try {
     const { group, yearWeek } = req.params;
@@ -153,7 +152,7 @@ app.delete('/api/schedules/:group/:yearWeek', async (req, res) => {
   }
 });
 
-// Login Route (No changes needed here)
+// Login Route (Robust bcrypt handling)
 app.post('/api/login', async (req, res) => {
   const { password } = req.body;
 
@@ -163,13 +162,14 @@ app.post('/api/login', async (req, res) => {
 
   try {
     const isMatch = await bcrypt.compare(password, process.env.HASHED_PASSWORD);
-    if (isMatch) {
+    // Explicitly check if isMatch is true/false
+    if (isMatch === true) {
       res.json({ success: true });
     } else {
       res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Bcrypt compare error:", error);
     res.status(500).json({ success: false, message: 'Server error during login' });
   }
 });
