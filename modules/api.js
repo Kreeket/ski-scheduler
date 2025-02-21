@@ -1,7 +1,7 @@
 //api.js
 
 //const API_BASE_URL = 'http://localhost:3000/api'; // DEVELOPMENT
-const API_BASE_URL = 'https://ski-scheduler.onrender.com'; // fPRODUCTION - You'll update this later
+const API_BASE_URL = 'https://ski-scheduler.onrender.com/api'; // fPRODUCTION - You'll update this later
 // --- Exercises ---
 
 export async function getExercises() {
