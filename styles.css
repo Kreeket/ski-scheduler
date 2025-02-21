@@ -23,7 +23,7 @@
 
 @layer components {
     .btn-base {
-        @apply py-2 px-4 rounded font-semibold cursor-pointer; /* Added cursor-pointer */
+        @apply py-2 px-4 rounded font-semibold cursor-pointer;
     }
     .btn-primary {
         @apply bg-primary hover:bg-primary-hover text-white;
@@ -42,8 +42,12 @@
         @apply w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500;
     }
 
+    .schedule-item {
+        @apply mb-4;
+    }
     .schedule-item label {
-        @apply font-bold;
+        @apply font-bold mb-1;
+        display: block;
     }
 
     .exercise-chip {
@@ -54,11 +58,24 @@
         @apply bg-gray-200 text-text-primary;
     }
     .btn-chip {
-        @apply rounded-full p-1 hover:bg-gray-200 cursor-pointer; /* Added cursor-pointer */
+        @apply rounded-full p-1 hover:bg-gray-200 cursor-pointer;
     }
 
-     /* Modal Close Button */
+    /* Modal Close Button */
     .modal-close-btn {
         @apply absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer;
+    }
+
+    /* Added Spacing within Modals */
+    .modal-content {
+        @apply p-5; /* Consistent padding inside modals */
+    }
+
+    #exerciseList .exercise-item{
+        @apply mb-4
+    }
+    /*Add button spacing*/
+    #addExerciseBtn {
+        @apply ml-2 mt-2; /* Added top margin */
     }
 }

@@ -18,7 +18,6 @@ export async function loadExercises() {
     }
 }
 
-// --- Renamed and Simplified ---
 export function populateAddExerciseDropdown() {
     const dropdown = document.getElementById('addExerciseSelect');
     if (!dropdown) return; // Important: check if element exists
@@ -33,7 +32,6 @@ export function populateAddExerciseDropdown() {
     });
 }
 
-// --- NEW FUNCTION: getExerciseById ---
 export function getExerciseByName(name) {
     return exercises.find(ex => ex.name === name);
 }
@@ -53,12 +51,12 @@ export async function saveNewExercise() {
 
     try {
         const createdExercise = await api.createExercise(newExercise);
-        exercises.push(createdExercise);  // exercises array now contains objects with IDs
-        populateAddExerciseDropdown(); // Update the "Add Exercise" dropdown
-        renderExerciseList();  // Update exercise list in modal
+        exercises.push(createdExercise);
+        populateAddExerciseDropdown();
+        renderExerciseList();
         document.getElementById('newExerciseName').value = ''; // Clear inputs
         document.getElementById('newExerciseDescription').value = '';
-        ui.hideElement(document.getElementById('exercisesModal')); // Close modal
+        ui.hideElement(document.getElementById('exercisesModal'));
         ui.showAlert('Exercise created successfully!', 'success');
     } catch (error) {
         console.error('Error creating exercise:', error);
@@ -68,15 +66,15 @@ export async function saveNewExercise() {
 
 export function showExercisesModal() {
     renderExerciseList();
-     // --- Add Close Button Logic ---
-    const closeButton = document.querySelector('#exercisesModal .modal-close-btn'); //Find within modal
+    ui.showElement(document.getElementById('exercisesModal')); // Show the modal
+
+    // Attach close button handler *after* showing the modal
+    const closeButton = document.querySelector('#exercisesModal .modal-close-btn');
     if (closeButton) {
-      closeButton.onclick = () => ui.hideElement(document.getElementById('exercisesModal'));
+        closeButton.onclick = () => ui.hideElement(document.getElementById('exercisesModal'));
     }
-    ui.showElement(document.getElementById('exercisesModal'));
 }
 
-// --- MODIFIED renderExerciseList (Uses IDs now) ---
 export function renderExerciseList() {
     const listContainer = document.getElementById('exerciseList');
     listContainer.innerHTML = '';
@@ -123,11 +121,11 @@ export function renderExerciseList() {
     });
 }
 
-// --- MODIFIED editExercise (Uses IDs now) ---
 function editExercise(exercise) {
     const editModal = document.getElementById('editExerciseModal');
     if (!editModal) {
       createEditExerciseModal();
+      //This is needed if we create a new modal
       document.getElementById('editExerciseModal').addEventListener('click', handleModalClickOutside);
     }
 
@@ -135,7 +133,6 @@ function editExercise(exercise) {
     document.getElementById('editExerciseName').value = exercise.name;
     document.getElementById('editExerciseDescription').value = exercise.description;
 
-    // --- MODIFIED: Use exercise.id ---
     document.getElementById('saveEditedExerciseButton').onclick = async () => {
         const newName = document.getElementById('editExerciseName').value.trim();
         let newDescription = document.getElementById('editExerciseDescription').value.trim();
@@ -148,22 +145,28 @@ function editExercise(exercise) {
         newDescription = newDescription.replace(/\n+/g, '\n\n');
 
         const updatedExercise = { name: newName, description: newDescription };
-        await updateExercise(exercise.id, updatedExercise); // Use exercise.id
+        await updateExercise(exercise.id, updatedExercise);
         ui.hideElement(document.getElementById('editExerciseModal'));
     };
-    // --- Add Close Button Logic ---
-    const closeButton = document.querySelector('#editExerciseModal .modal-close-btn'); //Find within modal
-      if(closeButton){
-        closeButton.onclick = () => ui.hideElement(document.getElementById('editExerciseModal'));
-      }
 
-    ui.showElement(document.getElementById('editExerciseModal'));
+    ui.showElement(document.getElementById('editExerciseModal')); // Show the modal
+
+    // Attach close button handler *after* showing the modal
+    const closeButton = document.querySelector('#editExerciseModal .modal-close-btn');
+    if (closeButton) {
+        closeButton.onclick = () => ui.hideElement(document.getElementById('editExerciseModal'));
+    }
 }
 
 function createEditExerciseModal(){
     const modalHtml = `
         <div id="editExerciseModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden flex items-center justify-center">
             <div class="relative p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[80vh] overflow-y-auto">
+                <button type="button" class="modal-close-btn absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
                 <h3 class="text-lg font-medium mb-4">Edit Exercise</h3>
                 <input type="text" id="editExerciseName" placeholder="Exercise Name" class="input-base mb-2 w-full">
                 <textarea id="editExerciseDescription" placeholder="Description" class="input-base mb-2 w-full" rows="4"></textarea>
@@ -185,7 +188,6 @@ function handleModalClickOutside(event) {
         ui.hideElement(document.getElementById('editExerciseModal'));
     }
 }
-// --- MODIFIED updateExercise (Uses IDs now) ---
 async function updateExercise(id, updatedExercise) {
     try {
         const result = await api.updateExercise(id, updatedExercise); // Pass ID to API
@@ -203,7 +205,6 @@ async function updateExercise(id, updatedExercise) {
     }
 }
 
-// --- MODIFIED deleteExercise (Uses IDs now) ---
 async function deleteExercise(exercise) {
     const confirmDelete = await ui.showConfirm(`Are you sure you want to delete "${exercise.name}"?`);
     if (confirmDelete) {
@@ -219,6 +220,7 @@ async function deleteExercise(exercise) {
         }
     }
 }
+
 export function showExerciseDetails(exercise) {
     if (!exercise) {
         console.error("showExerciseDetails called with null or undefined exercise");

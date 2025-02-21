@@ -14,33 +14,32 @@ export function populateScheduleForm(schedule) {
 
     if (schedule.exercises && Array.isArray(schedule.exercises)) {
         schedule.exercises.forEach(exerciseName => {
-            renderExercise(exerciseName); // Simplified call
+            renderExercise(exerciseName);
         });
     }
 
     hideAddScheduleButton();
 }
 
-// --- MODIFIED renderExercise (Uses Chips) ---
 export function renderExercise(exerciseName) {
     const dynamicExercisesContainer = document.getElementById('dynamicExercises');
 
     const exerciseDiv = document.createElement('div');
-    exerciseDiv.classList.add('exercise-chip', 'flex', 'items-center', 'space-x-2', 'bg-blue-100', 'text-blue-800', 'rounded-full', 'px-3', 'py-1', 'mb-2'); // Added classes
+    exerciseDiv.classList.add('exercise-chip', 'flex', 'items-center', 'space-x-2', 'bg-primary', 'text-white', 'rounded-full', 'px-3', 'py-1', 'mb-2');
 
     const exerciseNameSpan = document.createElement('span');
     exerciseNameSpan.textContent = exerciseName;
-    exerciseNameSpan.classList.add('flex-grow', 'text-sm');  // Added text-sm
+    exerciseNameSpan.classList.add('flex-grow', 'text-sm');
 
     const detailsButton = document.createElement('button');
     detailsButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
         <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-        </svg>`; // Added icon
+        </svg>`;
     detailsButton.type = 'button';
-    detailsButton.classList.add('btn-chip', 'text-blue-800', 'hover:text-blue-600'); // Added classes for styling
+    detailsButton.classList.add('btn-chip', 'text-white', 'hover:text-gray-200'); //Correct hover
     detailsButton.dataset.exerciseName = exerciseName;
       detailsButton.addEventListener('click', (event) => {
-        const name = event.currentTarget.dataset.exerciseName; // Use currentTarget
+        const name = event.currentTarget.dataset.exerciseName;
         const exercise = getExerciseByName(name);
         if (exercise) {
             showExerciseDetails(exercise);
@@ -50,9 +49,9 @@ export function renderExercise(exerciseName) {
     const removeButton = document.createElement('button');
     removeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-    </svg>`; // Added icon
+    </svg>`;
     removeButton.type = 'button';
-    removeButton.classList.add('btn-chip', 'text-red-600', 'hover:text-red-800');  // Added classes
+    removeButton.classList.add('btn-chip', 'text-red-600', 'hover:text-red-800');
     removeButton.addEventListener('click', () => {
         exerciseDiv.remove();
     });
@@ -62,9 +61,9 @@ export function renderExercise(exerciseName) {
     exerciseDiv.appendChild(removeButton);
     dynamicExercisesContainer.appendChild(exerciseDiv);
 }
-// --- getScheduleFormData ---
+
 export function getScheduleFormData() {
-    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .exercise-chip span'); // Select the span inside .exercise-chip
+    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .exercise-chip span');
     const exercises = [];
 
     dynamicExerciseElements.forEach(span => {
@@ -107,6 +106,7 @@ export function showLoadingIndicator() {
 export function hideLoadingIndicator() {
     document.getElementById('loadingIndicatorWrapper').classList.add('hidden');
 }
+
 export function showAddScheduleButton() {
     document.getElementById('addScheduleForCurrentWeek').classList.remove('hidden');
     document.getElementById('scheduleContainer').classList.add('hidden');
@@ -152,10 +152,13 @@ export function showExerciseDetails(exercise) {
     }
     document.getElementById('exerciseDetailsName').textContent = exercise.name;
     document.getElementById('exerciseDetailsDescription').innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
-      // --- Add Close Button Logic ---
+
+    // Show the modal *before* attaching the event listener
+    showElement(document.getElementById('exerciseDetailsModal'));
+
+    // Correctly attach the close button logic *after* showing the modal
     const closeButton = document.querySelector('#exerciseDetailsModal .modal-close-btn');
     if (closeButton) {
         closeButton.onclick = () => hideElement(document.getElementById('exerciseDetailsModal'));
     }
-    showElement(document.getElementById('exerciseDetailsModal'));
 }

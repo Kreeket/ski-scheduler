@@ -1960,7 +1960,6 @@ label{
   padding-left: 1rem;
   padding-right: 1rem;
   font-weight: 600
-  /* Added cursor-pointer */
 }
 
 .btn-primary{
@@ -2032,8 +2031,14 @@ label{
   --tw-ring-color: rgb(59 130 246 / var(--tw-ring-opacity, 1))
 }
 
+.schedule-item{
+  margin-bottom: 1rem
+}
+
 .schedule-item label{
-  font-weight: 700
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+  display: block
 }
 
 .exercise-chip{
@@ -2079,10 +2084,6 @@ label{
   background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
 }
 
-.btn-chip {
-  /* Added cursor-pointer */
-}
-
 /* Modal Close Button */
 
 .modal-close-btn{
@@ -2099,8 +2100,26 @@ label{
   color: rgb(31 41 55 / var(--tw-text-opacity, 1))
 }
 
+/* Added Spacing within Modals */
+
+#exerciseList .exercise-item{
+  margin-bottom: 1rem
+}
+
+/*Add button spacing*/
+
+#addExerciseBtn{
+  margin-left: 0.5rem;
+  margin-top: 0.5rem
+  /* Added top margin */
+}
+
 .fixed{
   position: fixed
+}
+
+.absolute{
+  position: absolute
 }
 
 .relative{
@@ -2109,6 +2128,14 @@ label{
 
 .inset-0{
   inset: 0px
+}
+
+.right-2{
+  right: 0.5rem
+}
+
+.top-2{
+  top: 0.5rem
 }
 
 .z-50{
@@ -2274,11 +2301,6 @@ label{
   border-width: 1px
 }
 
-.bg-blue-100{
-  --tw-bg-opacity: 1;
-  background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1))
-}
-
 .bg-body-bg{
   --tw-bg-opacity: 1;
   background-color: rgb(245 247 250 / var(--tw-bg-opacity, 1))
@@ -2292,6 +2314,11 @@ label{
 .bg-gray-600{
   --tw-bg-opacity: 1;
   background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1))
+}
+
+.bg-primary{
+  --tw-bg-opacity: 1;
+  background-color: rgb(44 62 80 / var(--tw-bg-opacity, 1))
 }
 
 .bg-white{
@@ -2361,11 +2388,6 @@ label{
   font-weight: 600
 }
 
-.text-blue-800{
-  --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity, 1))
-}
-
 .text-gray-600{
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity, 1))
@@ -2374,6 +2396,11 @@ label{
 .text-red-600{
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity, 1))
+}
+
+.text-white{
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1))
 }
 
 .opacity-25{
@@ -2400,9 +2427,14 @@ label{
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
 }
 
-.hover\:text-blue-600:hover{
+.hover\:text-gray-200:hover{
   --tw-text-opacity: 1;
-  color: rgb(37 99 235 / var(--tw-text-opacity, 1))
+  color: rgb(229 231 235 / var(--tw-text-opacity, 1))
+}
+
+.hover\:text-gray-800:hover{
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1))
 }
 
 .hover\:text-red-800:hover{
