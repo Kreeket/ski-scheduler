@@ -23,7 +23,7 @@
 
 @layer components {
     .btn-base {
-        @apply py-2 px-4 rounded font-semibold;
+        @apply py-2 px-4 rounded font-semibold cursor-pointer; /* Added cursor-pointer */
     }
     .btn-primary {
         @apply bg-primary hover:bg-primary-hover text-white;
@@ -46,15 +46,19 @@
         @apply font-bold;
     }
 
-    /* Refined styles for exercise chips */
     .exercise-chip {
         @apply flex items-center space-x-2 bg-primary text-white rounded-full px-3 py-1 mb-2;
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Add color transition */
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
     }
     .exercise-chip:hover {
-        @apply bg-gray-200 text-text-primary; /* Lighter background, darker text */
+        @apply bg-gray-200 text-text-primary;
     }
     .btn-chip {
-        @apply rounded-full p-1 hover:bg-gray-200;
+        @apply rounded-full p-1 hover:bg-gray-200 cursor-pointer; /* Added cursor-pointer */
+    }
+
+     /* Modal Close Button */
+    .modal-close-btn {
+        @apply absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer;
     }
 }

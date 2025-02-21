@@ -62,7 +62,7 @@ export function renderExercise(exerciseName) {
     exerciseDiv.appendChild(removeButton);
     dynamicExercisesContainer.appendChild(exerciseDiv);
 }
-// --- getScheduleFormData --- (No changes, but included for completeness)
+// --- getScheduleFormData ---
 export function getScheduleFormData() {
     const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .exercise-chip span'); // Select the span inside .exercise-chip
     const exercises = [];
@@ -152,5 +152,10 @@ export function showExerciseDetails(exercise) {
     }
     document.getElementById('exerciseDetailsName').textContent = exercise.name;
     document.getElementById('exerciseDetailsDescription').innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
+      // --- Add Close Button Logic ---
+    const closeButton = document.querySelector('#exerciseDetailsModal .modal-close-btn');
+    if (closeButton) {
+        closeButton.onclick = () => hideElement(document.getElementById('exerciseDetailsModal'));
+    }
     showElement(document.getElementById('exerciseDetailsModal'));
 }

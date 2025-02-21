@@ -1953,12 +1953,14 @@ label{
 }
 
 .btn-base{
+  cursor: pointer;
   border-radius: 0.25rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   padding-left: 1rem;
   padding-right: 1rem;
   font-weight: 600
+  /* Added cursor-pointer */
 }
 
 .btn-primary{
@@ -2034,8 +2036,6 @@ label{
   font-weight: 700
 }
 
-/* Refined styles for exercise chips */
-
 .exercise-chip{
   margin-bottom: 0.5rem;
   display: flex;
@@ -2059,7 +2059,6 @@ label{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
-  /* Add color transition */
 }
 
 .exercise-chip:hover{
@@ -2067,10 +2066,10 @@ label{
   background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
   color: rgb(44 62 80 / var(--tw-text-opacity, 1))
-  /* Lighter background, darker text */
 }
 
 .btn-chip{
+  cursor: pointer;
   border-radius: 9999px;
   padding: 0.25rem
 }
@@ -2078,6 +2077,26 @@ label{
 .btn-chip:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
+}
+
+.btn-chip {
+  /* Added cursor-pointer */
+}
+
+/* Modal Close Button */
+
+.modal-close-btn{
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  cursor: pointer;
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1))
+}
+
+.modal-close-btn:hover{
+  --tw-text-opacity: 1;
+  color: rgb(31 41 55 / var(--tw-text-opacity, 1))
 }
 
 .fixed{

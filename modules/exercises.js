@@ -68,6 +68,11 @@ export async function saveNewExercise() {
 
 export function showExercisesModal() {
     renderExerciseList();
+     // --- Add Close Button Logic ---
+    const closeButton = document.querySelector('#exercisesModal .modal-close-btn'); //Find within modal
+    if (closeButton) {
+      closeButton.onclick = () => ui.hideElement(document.getElementById('exercisesModal'));
+    }
     ui.showElement(document.getElementById('exercisesModal'));
 }
 
@@ -146,6 +151,11 @@ function editExercise(exercise) {
         await updateExercise(exercise.id, updatedExercise); // Use exercise.id
         ui.hideElement(document.getElementById('editExerciseModal'));
     };
+    // --- Add Close Button Logic ---
+    const closeButton = document.querySelector('#editExerciseModal .modal-close-btn'); //Find within modal
+      if(closeButton){
+        closeButton.onclick = () => ui.hideElement(document.getElementById('editExerciseModal'));
+      }
 
     ui.showElement(document.getElementById('editExerciseModal'));
 }
