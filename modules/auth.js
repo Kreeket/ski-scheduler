@@ -1,30 +1,31 @@
 // auth.js
-import * as api from './api.js'; // Import the api module
+import { getApiBaseUrl } from './api.js'; // Simplified import
 
-export async function authenticateUser(username, password) { // username is unused, but keep for consistency
+export async function authenticateUser(username, password) { // username is unused
     try {
-        const response = await fetch(`${api.API_BASE_URL}/login`, { // USE THE API_BASE_URL
+        const url = `${getApiBaseUrl()}/login`;
+        console.log("Login URL:", url); // DEBUGGING
+        const response = await fetch(url, { // Use the function
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ password }), // Send only the password
+            body: JSON.stringify({ password }),
         });
 
         if (!response.ok) {
-            // IMPORTANT CHANGE: Check for response.status BEFORE trying to parse JSON
             if (response.status === 404) {
-                throw new Error('Login endpoint not found (404).'); // More specific error
+                throw new Error('Login endpoint not found (404).');
             }
-            const errorData = await response.json(); // Get error details *only* if not a 404
-            throw new Error(errorData.message || 'Login failed'); // Throw a specific error
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Login failed');
         }
 
         const data = await response.json();
-        return data.success; // Return true or false
+        return data.success;
 
     } catch (error) {
-        console.error("Authentication error:", error); // Log the error
-        throw error; // Re-throw the error for the caller to handle
+        console.error("Authentication error:", error);
+        throw error;
     }
 }

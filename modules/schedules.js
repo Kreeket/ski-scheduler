@@ -1,6 +1,7 @@
 // schedules.js
-import * as api from './api.js';
+import { getApiBaseUrl } from './api.js'; // Simplified import
 import * as ui from './ui.js';
+import * as api from './api.js' // NEW
 
 export async function loadSchedule(group, yearWeek) {
     try {
@@ -29,6 +30,7 @@ export async function saveCurrentSchedule(group, yearWeek) {
         await api.updateSchedule(group, yearWeek, dataToSave);
         ui.showAlert("Schedule saved successfully!", 'success'); // SUCCESS icon
         loadSchedule(group, yearWeek); // Re-load
+
     } catch (error) {
         console.error("Error saving schedule:", error);
         ui.showAlert("Failed to save schedule. Please try again.", 'error'); // ERROR icon

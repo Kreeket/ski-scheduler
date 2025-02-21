@@ -1,11 +1,17 @@
-//api.js
+// api.js
 
-//const API_BASE_URL = 'http://localhost:3000/api'; // DEVELOPMENT
-const API_BASE_URL = 'https://ski-scheduler.onrender.com/api'; // fPRODUCTION - You'll update this later
+// Function to get the API base URL
+export function getApiBaseUrl() {
+    // return 'http://localhost:3000/api'; // DEVELOPMENT
+    return 'https://ski-scheduler.onrender.com/api'; // PRODUCTION - Use your Render URL
+}
+
 // --- Exercises ---
 
 export async function getExercises() {
-    const response = await fetch(`${API_BASE_URL}/exercises`);
+    const url = `${getApiBaseUrl()}/exercises`;
+    console.log("getExercises URL:", url); // DEBUGGING
+    const response = await fetch(url);
     if (!response.ok) {
         const errorData = await response.json();
         throw new Error(`Failed to fetch exercises: ${response.status} - ${errorData.message || 'Unknown error'}`);
@@ -14,7 +20,9 @@ export async function getExercises() {
 }
 
 export async function createExercise(exerciseData) {
-    const response = await fetch(`${API_BASE_URL}/exercises`, {
+    const url = `${getApiBaseUrl()}/exercises`;
+    console.log("createExercise URL:", url); // DEBUGGING
+    const response = await fetch(url, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -29,7 +37,9 @@ export async function createExercise(exerciseData) {
 }
 
 export async function updateExercise(id, exerciseData) {
-  const response = await fetch(`${API_BASE_URL}/exercises/${id}`, {
+  const url = `${getApiBaseUrl()}/exercises/${id}`;
+  console.log("updateExercise URL:", url); // DEBUGGING
+  const response = await fetch(url, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -44,7 +54,10 @@ export async function updateExercise(id, exerciseData) {
 }
 
 export async function deleteExercise(id) {
-    const response = await fetch(`${API_BASE_URL}/exercises/${id}`, {
+    const url = `${getApiBaseUrl()}/exercises/${id}`;
+    console.log("deleteExercise URL:", url); // DEBUGGING
+
+    const response = await fetch(url, {
         method: 'DELETE',
     });
     if (!response.ok) {
@@ -56,7 +69,9 @@ export async function deleteExercise(id) {
 
 // --- Schedules ---
 export async function getSchedule(group, yearWeek) {
-    const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`);
+    const url = `${getApiBaseUrl()}/schedules/${group}/${yearWeek}`;
+    console.log("getSchedule URL:", url); // DEBUGGING
+    const response = await fetch(url);
     if (!response.ok) {
         if (response.status === 404) {
             return null;
@@ -68,7 +83,9 @@ export async function getSchedule(group, yearWeek) {
 }
 
 export async function updateSchedule(group, yearWeek, scheduleData) {
-    const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`, {
+    const url = `${getApiBaseUrl()}/schedules/${group}/${yearWeek}`;
+    console.log("updateSchedule URL:", url); // DEBUGGING
+    const response = await fetch(url, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -83,7 +100,9 @@ export async function updateSchedule(group, yearWeek, scheduleData) {
 }
 
 export async function deleteSchedule(group, yearWeek) {
-    const response = await fetch(`${API_BASE_URL}/schedules/${group}/${yearWeek}`, {
+    const url = `${getApiBaseUrl()}/schedules/${group}/${yearWeek}`;
+    console.log("deleteSchedule URL:", url); // DEBUGGING
+    const response = await fetch(url, {
         method: 'DELETE',
     });
     if (!response.ok) {
@@ -94,7 +113,9 @@ export async function deleteSchedule(group, yearWeek) {
 }
 
 export async function getSchedules() {
-    const response = await fetch(`${API_BASE_URL}/schedules`);
+    const url = `${getApiBaseUrl()}/schedules`;
+    console.log("getSchedules URL:", url); // DEBUGGING
+    const response = await fetch(url);
     if (!response.ok) {
       const errorData = await response.json();
         throw new Error(`Failed to fetch schedules: ${response.status} - ${errorData.message || 'Unknown error'}`);

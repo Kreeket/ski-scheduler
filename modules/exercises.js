@@ -1,5 +1,5 @@
 // exercises.js
-import * as api from './api.js';
+import { getApiBaseUrl } from './api.js'; // Simplified import
 import * as ui from './ui.js';
 
 let exercises = []; // Local cache
@@ -145,7 +145,7 @@ function editExercise(exercise) {
         newDescription = newDescription.replace(/\n+/g, '\n\n');
 
         const updatedExercise = { name: newName, description: newDescription };
-        await updateExercise(exercise.id, updatedExercise);
+        await api.updateExercise(exercise.id, updatedExercise);
         ui.hideElement(document.getElementById('editExerciseModal'));
     };
 
@@ -228,5 +228,12 @@ export function showExerciseDetails(exercise) {
     }
     document.getElementById('exerciseDetailsName').textContent = exercise.name;
     document.getElementById('exerciseDetailsDescription').innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
+     // Show the modal *before* attaching the event listener
     ui.showElement(document.getElementById('exerciseDetailsModal'));
+
+    // Find the close button *within* the modal and attach the event listener
+    const closeButton = document.querySelector('#exerciseDetailsModal .modal-close-btn');
+    if (closeButton) {
+        closeButton.onclick = () => ui.hideElement(document.getElementById('exerciseDetailsModal'));
+    }
 }
