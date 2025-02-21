@@ -1,5 +1,5 @@
 // exercises.js
-import { getApiBaseUrl } from './api.js'; // Simplified import
+import { getApiBaseUrl, getExercises, createExercise, updateExercise, deleteExercise } from './api.js'; // Import named functions
 import * as ui from './ui.js';
 
 let exercises = []; // Local cache
@@ -7,8 +7,8 @@ let exercises = []; // Local cache
 export async function loadExercises() {
     ui.showLoadingIndicator();
     try {
-        exercises = await api.getExercises();
-        populateAddExerciseDropdown(); // Populate the "Add Exercise" dropdown
+        exercises = await getExercises(); // Use the imported function directly
+        populateAddExerciseDropdown();
 
     } catch (error) {
         console.error('Error loading exercises:', error);
@@ -20,13 +20,13 @@ export async function loadExercises() {
 
 export function populateAddExerciseDropdown() {
     const dropdown = document.getElementById('addExerciseSelect');
-    if (!dropdown) return; // Important: check if element exists
+    if (!dropdown) return;
 
-    dropdown.innerHTML = '<option value="">Select an Exercise</option>'; // Clear
+    dropdown.innerHTML = '<option value="">Select an Exercise</option>';
 
     exercises.forEach(exercise => {
         const option = document.createElement('option');
-        option.value = exercise.name; // Use NAME for value (schedule data)
+        option.value = exercise.name;
         option.textContent = exercise.name;
         dropdown.appendChild(option);
     });
@@ -50,7 +50,7 @@ export async function saveNewExercise() {
     const newExercise = { name, description };
 
     try {
-        const createdExercise = await api.createExercise(newExercise);
+        const createdExercise = await createExercise(newExercise); // Use imported function
         exercises.push(createdExercise);
         populateAddExerciseDropdown();
         renderExerciseList();
@@ -66,9 +66,8 @@ export async function saveNewExercise() {
 
 export function showExercisesModal() {
     renderExerciseList();
-    ui.showElement(document.getElementById('exercisesModal')); // Show the modal
+    ui.showElement(document.getElementById('exercisesModal'));
 
-    // Attach close button handler *after* showing the modal
     const closeButton = document.querySelector('#exercisesModal .modal-close-btn');
     if (closeButton) {
         closeButton.onclick = () => ui.hideElement(document.getElementById('exercisesModal'));
@@ -103,7 +102,7 @@ export function renderExerciseList() {
         editButton.type = 'button';
         editButton.className = 'btn-base btn-primary mr-2';
         editButton.addEventListener('click', () => {
-            editExercise(exercise); // Pass the whole exercise object
+            editExercise(exercise);
         });
         content.appendChild(editButton);
 
@@ -112,7 +111,7 @@ export function renderExerciseList() {
         deleteButton.type = 'button';
         deleteButton.className = 'btn-base btn-danger';
         deleteButton.addEventListener('click', () => {
-            deleteExercise(exercise); // Pass the whole exercise object
+            deleteExercise(exercise);
         });
         content.appendChild(deleteButton);
 
@@ -125,11 +124,9 @@ function editExercise(exercise) {
     const editModal = document.getElementById('editExerciseModal');
     if (!editModal) {
       createEditExerciseModal();
-      //This is needed if we create a new modal
       document.getElementById('editExerciseModal').addEventListener('click', handleModalClickOutside);
     }
 
-    // Populate the modal with the exercise data
     document.getElementById('editExerciseName').value = exercise.name;
     document.getElementById('editExerciseDescription').value = exercise.description;
 
@@ -145,13 +142,12 @@ function editExercise(exercise) {
         newDescription = newDescription.replace(/\n+/g, '\n\n');
 
         const updatedExercise = { name: newName, description: newDescription };
-        await api.updateExercise(exercise.id, updatedExercise);
+        await api.updateExercise(exercise.id, updatedExercise); // Use imported function
         ui.hideElement(document.getElementById('editExerciseModal'));
     };
 
-    ui.showElement(document.getElementById('editExerciseModal')); // Show the modal
+    ui.showElement(document.getElementById('editExerciseModal'));
 
-    // Attach close button handler *after* showing the modal
     const closeButton = document.querySelector('#editExerciseModal .modal-close-btn');
     if (closeButton) {
         closeButton.onclick = () => ui.hideElement(document.getElementById('editExerciseModal'));
@@ -188,14 +184,15 @@ function handleModalClickOutside(event) {
         ui.hideElement(document.getElementById('editExerciseModal'));
     }
 }
-async function updateExercise(id, updatedExercise) {
+// --- Corrected updateExercise and deleteExercise functions ---
+async function _updateExercise(id, updatedExercise) { // Prefix with _
     try {
-        const result = await api.updateExercise(id, updatedExercise); // Pass ID to API
-        // Find and update the exercise in the local array using the ID
+        // Use the imported `updateExercise` function from `api.js`
+        const result = await api.updateExercise(id, updatedExercise);
         const index = exercises.findIndex(ex => ex.id === id);
         if (index !== -1) {
-            exercises[index] = { ...exercises[index], ...result }; // Keep ID, update
-            populateAddExerciseDropdown(); // Update "Add Exercise" dropdown
+            exercises[index] = { ...exercises[index], ...result };
+            populateAddExerciseDropdown();
             renderExerciseList();
             ui.showAlert("Exercise updated successfully!", 'success');
         }
@@ -205,13 +202,14 @@ async function updateExercise(id, updatedExercise) {
     }
 }
 
-async function deleteExercise(exercise) {
+async function _deleteExercise(exercise) { // Prefix with _
     const confirmDelete = await ui.showConfirm(`Are you sure you want to delete "${exercise.name}"?`);
     if (confirmDelete) {
         try {
-            await api.deleteExercise(exercise.id); // Pass ID to API
-            exercises = exercises.filter(ex => ex.id !== exercise.id); // Filter by ID
-            populateAddExerciseDropdown(); // Update "Add Exercise" dropdown
+            // Use the imported `deleteExercise` function from `api.js`
+            await api.deleteExercise(exercise.id);
+            exercises = exercises.filter(ex => ex.id !== exercise.id);
+            populateAddExerciseDropdown();
             renderExerciseList();
             ui.showAlert("Exercise deleted successfully!", 'success');
         } catch (error) {
@@ -228,10 +226,8 @@ export function showExerciseDetails(exercise) {
     }
     document.getElementById('exerciseDetailsName').textContent = exercise.name;
     document.getElementById('exerciseDetailsDescription').innerHTML = `<p class="whitespace-pre-wrap">${exercise.description}</p>`;
-     // Show the modal *before* attaching the event listener
     ui.showElement(document.getElementById('exerciseDetailsModal'));
 
-    // Find the close button *within* the modal and attach the event listener
     const closeButton = document.querySelector('#exerciseDetailsModal .modal-close-btn');
     if (closeButton) {
         closeButton.onclick = () => ui.hideElement(document.getElementById('exerciseDetailsModal'));
