@@ -7,7 +7,7 @@
 
 @layer base {
     body {
-        @apply bg-body-bg; /* Apply correct background */
+        @apply bg-body-bg;
     }
     h1 {
         @apply text-text-primary;
@@ -46,11 +46,15 @@
         @apply font-bold;
     }
 
-    /* New styles for exercise chips */
+    /* Refined styles for exercise chips */
     .exercise-chip {
-        @apply flex items-center space-x-2 bg-blue-100 text-blue-800 rounded-full px-3 py-1 mb-2;
+        @apply flex items-center space-x-2 bg-primary text-white rounded-full px-3 py-1 mb-2;
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out; /* Add color transition */
+    }
+    .exercise-chip:hover {
+        @apply bg-gray-200 text-text-primary; /* Lighter background, darker text */
     }
     .btn-chip {
-        @apply rounded-full p-1 hover:bg-gray-200; /* General hover style for chip buttons */
+        @apply rounded-full p-1 hover:bg-gray-200;
     }
 }

@@ -1897,26 +1897,25 @@ video {
 
 body{
   --tw-bg-opacity: 1;
-  background-color: rgb(184 217 207 / var(--tw-bg-opacity, 1))
-  /* Apply correct background */
+  background-color: rgb(245 247 250 / var(--tw-bg-opacity, 1))
 }
 
 h1{
   --tw-text-opacity: 1;
-  color: rgb(26 26 26 / var(--tw-text-opacity, 1))
+  color: rgb(44 62 80 / var(--tw-text-opacity, 1))
 }
 
 label{
   font-weight: 700;
   --tw-text-opacity: 1;
-  color: rgb(26 26 26 / var(--tw-text-opacity, 1))
+  color: rgb(44 62 80 / var(--tw-text-opacity, 1))
 }
 
 /* Style for exercise description in details modal */
 
 #exerciseDetailsModal p{
   --tw-text-opacity: 1;
-  color: rgb(102 102 102 / var(--tw-text-opacity, 1))
+  color: rgb(52 73 94 / var(--tw-text-opacity, 1))
 }
 
 .container{
@@ -1964,50 +1963,50 @@ label{
 
 .btn-primary{
   --tw-bg-opacity: 1;
-  background-color: rgb(132 165 157 / var(--tw-bg-opacity, 1));
+  background-color: rgb(44 62 80 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1))
 }
 
 .btn-primary:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(107 136 128 / var(--tw-bg-opacity, 1))
+  background-color: rgb(26 40 51 / var(--tw-bg-opacity, 1))
 }
 
 .btn-secondary{
   --tw-bg-opacity: 1;
-  background-color: rgb(247 237 226 / var(--tw-bg-opacity, 1));
+  background-color: rgb(236 240 241 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
-  color: rgb(26 26 26 / var(--tw-text-opacity, 1))
+  color: rgb(44 62 80 / var(--tw-text-opacity, 1))
 }
 
 .btn-secondary:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(231 217 206 / var(--tw-bg-opacity, 1))
+  background-color: rgb(217 223 225 / var(--tw-bg-opacity, 1))
 }
 
 .btn-danger{
   --tw-bg-opacity: 1;
-  background-color: rgb(242 132 130 / var(--tw-bg-opacity, 1));
+  background-color: rgb(231 76 60 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1))
 }
 
 .btn-danger:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(217 101 99 / var(--tw-bg-opacity, 1))
+  background-color: rgb(192 57 43 / var(--tw-bg-opacity, 1))
 }
 
 .btn-yellow{
   --tw-bg-opacity: 1;
-  background-color: rgb(246 189 96 / var(--tw-bg-opacity, 1));
+  background-color: rgb(243 156 18 / var(--tw-bg-opacity, 1));
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1))
 }
 
 .btn-yellow:hover{
   --tw-bg-opacity: 1;
-  background-color: rgb(232 168 77 / var(--tw-bg-opacity, 1))
+  background-color: rgb(214 137 16 / var(--tw-bg-opacity, 1))
 }
 
 .input-base{
@@ -2035,7 +2034,7 @@ label{
   font-weight: 700
 }
 
-/* New styles for exercise chips */
+/* Refined styles for exercise chips */
 
 .exercise-chip{
   margin-bottom: 0.5rem;
@@ -2052,13 +2051,23 @@ label{
 .exercise-chip{
   border-radius: 9999px;
   --tw-bg-opacity: 1;
-  background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1));
+  background-color: rgb(44 62 80 / var(--tw-bg-opacity, 1));
   padding-left: 0.75rem;
   padding-right: 0.75rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   --tw-text-opacity: 1;
-  color: rgb(30 64 175 / var(--tw-text-opacity, 1))
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out
+  /* Add color transition */
+}
+
+.exercise-chip:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1));
+  --tw-text-opacity: 1;
+  color: rgb(44 62 80 / var(--tw-text-opacity, 1))
+  /* Lighter background, darker text */
 }
 
 .btn-chip{
@@ -2069,10 +2078,6 @@ label{
 .btn-chip:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
-}
-
-.btn-chip {
-  /* General hover style for chip buttons */
 }
 
 .fixed{
@@ -2154,10 +2159,6 @@ label{
 
 .max-h-\[80vh\]{
   max-height: 80vh
-}
-
-.min-h-screen{
-  min-height: 100vh
 }
 
 .w-4{
@@ -2259,9 +2260,14 @@ label{
   background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1))
 }
 
+.bg-body-bg{
+  --tw-bg-opacity: 1;
+  background-color: rgb(245 247 250 / var(--tw-bg-opacity, 1))
+}
+
 .bg-card-bg{
   --tw-bg-opacity: 1;
-  background-color: rgb(226 232 240 / var(--tw-bg-opacity, 1))
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))
 }
 
 .bg-gray-600{
@@ -2269,19 +2275,9 @@ label{
   background-color: rgb(75 85 99 / var(--tw-bg-opacity, 1))
 }
 
-.bg-secondary{
-  --tw-bg-opacity: 1;
-  background-color: rgb(247 237 226 / var(--tw-bg-opacity, 1))
-}
-
 .bg-white{
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))
-}
-
-.bg-body-bg{
-  --tw-bg-opacity: 1;
-  background-color: rgb(184 217 207 / var(--tw-bg-opacity, 1))
 }
 
 .bg-opacity-50{
