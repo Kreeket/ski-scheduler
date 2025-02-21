@@ -1897,7 +1897,8 @@ video {
 
 body{
   --tw-bg-opacity: 1;
-  background-color: rgb(22 163 74 / var(--tw-bg-opacity, 1))
+  background-color: rgb(184 217 207 / var(--tw-bg-opacity, 1))
+  /* Apply correct background */
 }
 
 h1{
@@ -2034,6 +2035,46 @@ label{
   font-weight: 700
 }
 
+/* New styles for exercise chips */
+
+.exercise-chip{
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center
+}
+
+.exercise-chip > :not([hidden]) ~ :not([hidden]){
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)))
+}
+
+.exercise-chip{
+  border-radius: 9999px;
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1));
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(30 64 175 / var(--tw-text-opacity, 1))
+}
+
+.btn-chip{
+  border-radius: 9999px;
+  padding: 0.25rem
+}
+
+.btn-chip:hover{
+  --tw-bg-opacity: 1;
+  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))
+}
+
+.btn-chip {
+  /* General hover style for chip buttons */
+}
+
 .fixed{
   position: fixed
 }
@@ -2095,6 +2136,10 @@ label{
   display: none
 }
 
+.h-4{
+  height: 1rem
+}
+
 .h-5{
   height: 1.25rem
 }
@@ -2113,6 +2158,10 @@ label{
 
 .min-h-screen{
   min-height: 100vh
+}
+
+.w-4{
+  width: 1rem
 }
 
 .w-5{
@@ -2189,6 +2238,10 @@ label{
   border-radius: 0.25rem
 }
 
+.rounded-full{
+  border-radius: 9999px
+}
+
 .rounded-lg{
   border-radius: 0.5rem
 }
@@ -2199,6 +2252,11 @@ label{
 
 .border{
   border-width: 1px
+}
+
+.bg-blue-100{
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1))
 }
 
 .bg-card-bg{
@@ -2221,6 +2279,11 @@ label{
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))
 }
 
+.bg-body-bg{
+  --tw-bg-opacity: 1;
+  background-color: rgb(184 217 207 / var(--tw-bg-opacity, 1))
+}
+
 .bg-opacity-50{
   --tw-bg-opacity: 0.5
 }
@@ -2235,6 +2298,16 @@ label{
 
 .p-5{
   padding: 1.25rem
+}
+
+.px-3{
+  padding-left: 0.75rem;
+  padding-right: 0.75rem
+}
+
+.py-1{
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem
 }
 
 .py-4{
@@ -2261,11 +2334,6 @@ label{
   line-height: 1.25rem
 }
 
-.text-xs{
-  font-size: 0.75rem;
-  line-height: 1rem
-}
-
 .font-bold{
   font-weight: 700
 }
@@ -2278,9 +2346,19 @@ label{
   font-weight: 600
 }
 
+.text-blue-800{
+  --tw-text-opacity: 1;
+  color: rgb(30 64 175 / var(--tw-text-opacity, 1))
+}
+
 .text-gray-600{
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity, 1))
+}
+
+.text-red-600{
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity, 1))
 }
 
 .opacity-25{
@@ -2305,4 +2383,14 @@ label{
 
 .filter{
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
+}
+
+.hover\:text-blue-600:hover{
+  --tw-text-opacity: 1;
+  color: rgb(37 99 235 / var(--tw-text-opacity, 1))
+}
+
+.hover\:text-red-800:hover{
+  --tw-text-opacity: 1;
+  color: rgb(153 27 27 / var(--tw-text-opacity, 1))
 }

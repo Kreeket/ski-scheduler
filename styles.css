@@ -7,7 +7,7 @@
 
 @layer base {
     body {
-        @apply bg-body-bg;
+        @apply bg-body-bg; /* Apply correct background */
     }
     h1 {
         @apply text-text-primary;
@@ -44,5 +44,13 @@
 
     .schedule-item label {
         @apply font-bold;
+    }
+
+    /* New styles for exercise chips */
+    .exercise-chip {
+        @apply flex items-center space-x-2 bg-blue-100 text-blue-800 rounded-full px-3 py-1 mb-2;
+    }
+    .btn-chip {
+        @apply rounded-full p-1 hover:bg-gray-200; /* General hover style for chip buttons */
     }
 }

@@ -14,46 +14,47 @@ export function populateScheduleForm(schedule) {
 
     if (schedule.exercises && Array.isArray(schedule.exercises)) {
         schedule.exercises.forEach(exerciseName => {
-            const selectId = `dynamicSelect-${Date.now()}`;
-            renderExercise(exerciseName, selectId);
+            renderExercise(exerciseName); // Simplified call
         });
     }
 
     hideAddScheduleButton();
 }
 
-// --- renderExercise (Corrected) ---
-export function renderExercise(exerciseName, selectId) {
+// --- MODIFIED renderExercise (Uses Chips) ---
+export function renderExercise(exerciseName) {
     const dynamicExercisesContainer = document.getElementById('dynamicExercises');
 
     const exerciseDiv = document.createElement('div');
-    exerciseDiv.classList.add('schedule-item', 'flex', 'items-center', 'space-x-2');
+    exerciseDiv.classList.add('exercise-chip', 'flex', 'items-center', 'space-x-2', 'bg-blue-100', 'text-blue-800', 'rounded-full', 'px-3', 'py-1', 'mb-2'); // Added classes
 
     const exerciseNameSpan = document.createElement('span');
     exerciseNameSpan.textContent = exerciseName;
-    exerciseNameSpan.classList.add('flex-grow');
+    exerciseNameSpan.classList.add('flex-grow', 'text-sm');  // Added text-sm
 
     const detailsButton = document.createElement('button');
-    detailsButton.textContent = 'Details';
+    detailsButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+        <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+        </svg>`; // Added icon
     detailsButton.type = 'button';
-    detailsButton.classList.add('btn-base', 'btn-secondary', 'text-xs');
+    detailsButton.classList.add('btn-chip', 'text-blue-800', 'hover:text-blue-600'); // Added classes for styling
     detailsButton.dataset.exerciseName = exerciseName;
-     detailsButton.addEventListener('click', (event) => {
-        const name = event.target.dataset.exerciseName;
+      detailsButton.addEventListener('click', (event) => {
+        const name = event.currentTarget.dataset.exerciseName; // Use currentTarget
         const exercise = getExerciseByName(name);
         if (exercise) {
             showExerciseDetails(exercise);
         }
     });
 
-
     const removeButton = document.createElement('button');
-    removeButton.textContent = 'Remove';
+    removeButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+    </svg>`; // Added icon
     removeButton.type = 'button';
-    removeButton.classList.add('btn-base', 'btn-danger', 'text-xs');
+    removeButton.classList.add('btn-chip', 'text-red-600', 'hover:text-red-800');  // Added classes
     removeButton.addEventListener('click', () => {
         exerciseDiv.remove();
-        // --- REMOVED FROM HERE ---
     });
 
     exerciseDiv.appendChild(exerciseNameSpan);
@@ -61,10 +62,9 @@ export function renderExercise(exerciseName, selectId) {
     exerciseDiv.appendChild(removeButton);
     dynamicExercisesContainer.appendChild(exerciseDiv);
 }
-
-// --- getScheduleFormData ---
+// --- getScheduleFormData --- (No changes, but included for completeness)
 export function getScheduleFormData() {
-    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .schedule-item span');
+    const dynamicExerciseElements = document.querySelectorAll('#dynamicExercises .exercise-chip span'); // Select the span inside .exercise-chip
     const exercises = [];
 
     dynamicExerciseElements.forEach(span => {
