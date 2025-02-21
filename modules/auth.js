@@ -12,7 +12,11 @@ export async function authenticateUser(username, password) { // username is unus
         });
 
         if (!response.ok) {
-            const errorData = await response.json(); // Get error details
+            // IMPORTANT CHANGE: Check for response.status BEFORE trying to parse JSON
+            if (response.status === 404) {
+                throw new Error('Login endpoint not found (404).'); // More specific error
+            }
+            const errorData = await response.json(); // Get error details *only* if not a 404
             throw new Error(errorData.message || 'Login failed'); // Throw a specific error
         }
 
