@@ -10,7 +10,7 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // CORS Configuration
-const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:8080', 'https://your-production-domain.com'];
+const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:8080', 'https://exquisite-naiad-d9a129.netlify.app/'];
 
 app.use(cors({
   origin: function (origin, callback) {

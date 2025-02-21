@@ -3,7 +3,7 @@ import * as api from './api.js'; // Import the api module
 
 export async function authenticateUser(username, password) { // username is unused, but keep for consistency
     try {
-        const response = await fetch('http://localhost:3000/api/login', { // Or use api.login() if you create it
+        const response = await fetch(`${api.API_BASE_URL}/login`, { // USE THE API_BASE_URL
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
