@@ -2,8 +2,8 @@
 
 // Function to get the API base URL
 export function getApiBaseUrl() {
-    return 'http://localhost:3000/api'; // DEVELOPMENT
-    //return 'https://ski-scheduler.onrender.com/api'; // PRODUCTION - Use your Render URL
+    //return 'http://localhost:3000/api'; // DEVELOPMENT
+    return 'https://ski-scheduler.onrender.com/api'; // PRODUCTION - Use your Render URL
 }
 
 // --- Exercises ---
