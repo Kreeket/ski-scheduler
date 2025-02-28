@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 10000;
 
 // --- CORS Configuration ---
 const allowedOrigins = [
