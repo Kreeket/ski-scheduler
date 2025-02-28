@@ -1,0 +1,49 @@
+/* utilities.css - Utility classes */
+
+/* Spacing utilities */
+.space-y-1 > * + * {
+    margin-top: 0.25rem;
+}
+
+.space-y-2 > * + * {
+    margin-top: 0.5rem;
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+
+.space-y-4 > * + * {
+    margin-top: 1rem;
+}
+
+/* Button loading state */
+.btn-loading {
+    @apply opacity-75 cursor-not-allowed;
+}
+
+/* Transitions */
+.transition-fade {
+    transition: opacity 0.2s ease-in-out;
+}
+
+.fade-enter {
+    opacity: 0;
+}
+
+.fade-enter-active {
+    opacity: 1;
+}
+
+.fade-exit {
+    opacity: 1;
+}
+
+.fade-exit-active {
+    opacity: 0;
+}
+
+/* Commonly used display utilities */
+.whitespace-pre-wrap {
+    white-space: pre-wrap;
+}

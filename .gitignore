@@ -1,3 +1,5 @@
 /backend/node_modules/
 /node_modules/
 /repomix-output.txt
+/modules/ext_libs/
+/output.css/

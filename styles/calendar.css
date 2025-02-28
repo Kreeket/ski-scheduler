@@ -1,0 +1,159 @@
+/* calendar.css - Calendar-specific styles */
+
+/* Calendar container */
+.calendar-container {
+    @apply bg-white p-4 rounded-lg shadow;
+}
+
+/* Flatpickr overrides for better performance */
+.flatpickr-calendar {
+    width: 100% !important;
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+/* Day cell styling */
+.flatpickr-day {
+    max-height: 40px; /* Limit height to avoid layout shifts */
+    position: relative !important; /* Ensure position is relative for indicators */
+    line-height: 40px;
+    border-radius: 4px !important;
+}
+
+/* Enhanced session indicator styling */
+.flatpickr-calendar .flatpickr-day.has-session {
+    background-color: #dbeafe !important; /* Light blue background */
+    color: #1e40af !important; /* Darker blue text */
+    font-weight: bold !important;
+    position: relative !important;
+    border: 1px solid #93c5fd !important; /* Light blue border */
+    z-index: 1 !important; /* Ensure proper stacking */
+}
+
+.flatpickr-calendar .flatpickr-day.has-session:hover {
+    background-color: #bfdbfe !important; /* Slightly darker on hover */
+}
+
+/* Selected day styling */
+.flatpickr-calendar .flatpickr-day.selected,
+.flatpickr-calendar .flatpickr-day.selected:hover {
+    background-color: #3b82f6 !important; /* Medium blue for selected day */
+    border-color: #2563eb !important; /* Darker blue border for selected */
+    color: white !important; /* White text for contrast */
+    z-index: 2 !important; /* Ensure it appears above others */
+}
+
+.flatpickr-calendar .flatpickr-day.has-session.selected {
+    background-color: #3b82f6 !important; /* Medium blue for selected day */
+    color: white !important;
+}
+
+/* More visible session indicator */
+.session-indicator {
+    position: absolute !important;
+    bottom: 1px !important;
+    right: 1px !important;
+    background-color: #1e40af !important; /* Dark blue background */
+    color: white !important;
+    border-radius: 50% !important;
+    width: 16px !important;
+    height: 16px !important;
+    font-size: 9px !important;
+    line-height: 16px !important;
+    text-align: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 3 !important; /* Ensure it's above everything */
+    border: 1px solid white !important; /* White border for better visibility */
+    pointer-events: none !important; /* Don't interfere with clicks */
+}
+
+/* Today highlighting */
+.flatpickr-calendar .flatpickr-day.today {
+    border-color: #3b82f6 !important; /* Blue border for today */
+    background-color: #eff6ff !important; /* Very light blue background */
+    font-weight: bold !important;
+    position: relative !important;
+}
+
+.flatpickr-calendar .flatpickr-day.today.has-session {
+    background-color: #bfdbfe !important; /* Slightly darker blue for today with sessions */
+    border: 2px solid #3b82f6 !important; /* Thicker border for emphasis */
+}
+
+.flatpickr-calendar .flatpickr-day.today.has-session.selected {
+    background-color: #3b82f6 !important;
+    color: white !important;
+}
+
+/* Calendar Today button styling */
+.flatpickr-today-button {
+    background-color: #e0f2fe; /* Light blue background */
+    color: #0284c7; /* Medium blue text */
+    border: 1px solid #bae6fd; /* Light blue border */
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.flatpickr-today-button:hover {
+    background-color: #bae6fd; /* Slightly darker on hover */
+}
+
+/* Fix month navigation buttons */
+.flatpickr-months .flatpickr-prev-month,
+.flatpickr-months .flatpickr-next-month {
+    padding: 10px !important;
+    fill: #1e40af !important; /* Blue color for arrows */
+}
+
+.flatpickr-months .flatpickr-prev-month:hover,
+.flatpickr-months .flatpickr-next-month:hover {
+    fill: #3b82f6 !important; /* Lighter blue on hover */
+}
+
+/* Fix month dropdown */
+.flatpickr-current-month {
+    padding-top: 0 !important;
+    height: 50px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* Reduce animations for better performance */
+.flatpickr-calendar.animate.open,
+.flatpickr-calendar.animate.close {
+    animation-duration: 150ms !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+    .flatpickr-day {
+        line-height: 32px;
+        height: 32px;
+        max-height: 32px;
+        @apply text-sm;
+    }
+    
+    .flatpickr-calendar {
+        max-width: 300px;
+    }
+    
+    .session-indicator {
+        width: 14px !important;
+        height: 14px !important;
+        font-size: 8px !important;
+        line-height: 14px !important;
+    }
+}
+
+/* Calendar performance optimizations */
+.flatpickr-months {
+    will-change: transform;
+}

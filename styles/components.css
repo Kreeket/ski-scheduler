@@ -1,0 +1,76 @@
+/* components.css - Reusable component styles */
+
+@layer components {
+    /* Basic button styles */
+    .btn-base {
+        @apply py-2 px-4 rounded font-semibold cursor-pointer transition-colors duration-200;
+    }
+    
+    .btn-primary {
+        @apply bg-primary hover:bg-primary-hover text-white;
+    }
+    
+    .btn-secondary {
+        @apply bg-secondary hover:bg-secondary-hover text-text-primary;
+    }
+    
+    .btn-danger {
+        @apply bg-danger hover:bg-danger-hover text-white;
+    }
+
+    .btn-yellow {
+        @apply bg-accent hover:bg-accent-hover text-white;
+    }
+    
+    /* Button sizes */
+    .btn-sm {
+        @apply py-1 px-2 text-sm;
+    }
+    
+    /* Form inputs */
+    .input-base {
+        @apply w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary;
+    }
+    
+    /* Session card */
+    .session-card {
+        @apply bg-white rounded-lg shadow-sm border-l-4 border-primary p-3;
+    }
+    
+    /* Exercise item */
+    .exercise-item {
+        @apply bg-white rounded-lg shadow-sm p-3 mb-3;
+    }
+    
+    /* Date pill component */
+    .date-pill {
+        @apply flex flex-col items-center justify-center rounded-lg bg-primary text-white;
+    }
+    
+    .date-pill-sm {
+        @apply w-10 h-10 text-xs;
+    }
+    
+    .date-pill-lg {
+        @apply w-14 h-14;
+    }
+    
+    /* Page section */
+    .page-section {
+        @apply bg-white rounded-lg shadow-md p-4 mb-4;
+    }
+    
+    /* Section header */
+    .section-header {
+        @apply text-lg font-semibold mb-3;
+    }
+    
+    /* Loading indicator */
+    .loading-indicator {
+        @apply fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50;
+    }
+    
+    .loading-spinner {
+        @apply animate-spin h-5 w-5 mr-3 text-gray-600;
+    }
+}

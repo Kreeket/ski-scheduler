@@ -1,0 +1,61 @@
+[
+  {
+    "id": "f2550254-f0b8-43de-93d0-1407d4a9e28b",
+    "group": "group1",
+    "title": "dsafsdf",
+    "date": "2025-02-28",
+    "startTime": "08:07",
+    "endTime": "09:07",
+    "location": "sdf",
+    "leaders": "",
+    "notes": "",
+    "exercises": [
+      "Teknikbana på snö",
+      "Hinderbana med grundfärdigheter barmark"
+    ]
+  },
+  {
+    "id": "294c694d-440b-47c4-a7b7-2eedef09b816",
+    "group": "group1",
+    "title": "Skidlek",
+    "date": "2025-03-03",
+    "startTime": "08:18",
+    "endTime": "09:18",
+    "location": "Tandsbyn",
+    "leaders": "",
+    "notes": "",
+    "exercises": [
+      "Teknikbana på snö",
+      "Hinderbana med grundfärdigheter barmark"
+    ]
+  },
+  {
+    "id": "dd8444a4-d63d-4ef6-bc17-73fc86b36438",
+    "group": "group1",
+    "title": "sfasfasf",
+    "date": "2025-02-28",
+    "startTime": "08:53",
+    "endTime": "09:53",
+    "location": "asf",
+    "leaders": "asf",
+    "notes": "",
+    "exercises": [
+      "Hinderbana med grundfärdigheter barmark",
+      "Teknikbana på snö",
+      "Brevbäraren",
+      "Sista paret ut"
+    ]
+  },
+  {
+    "id": "72c95fdd-7de6-4e20-aaa0-1ef2c6a9cab3",
+    "group": "group1",
+    "title": "Training Session",
+    "date": "2025-02-28",
+    "startTime": "08:54",
+    "endTime": "09:54",
+    "location": "",
+    "leaders": "",
+    "notes": "",
+    "exercises": []
+  }
+]

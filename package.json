@@ -1,17 +1,22 @@
 {
   "name": "ski-scheduler",
   "version": "1.0.0",
-  "description": "",
+  "description": "A scheduler for ski training sessions",
   "scripts": {
-    "build": "tailwindcss -i ./styles.css -o ./output.css",
-    "watch": "tailwindcss -i ./styles.css -o ./output.css -w"
+    "build": "tailwindcss -i ./styles/main.css -o ./output.css",
+    "watch": "tailwindcss -i ./styles/main.css -o ./output.css -w",
+    "build:prod": "NODE_ENV=production tailwindcss -i ./styles/main.css -o ./output.css --minify",
+    "dev": "live-server --port=8080"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.20",
+    "cssnano": "^6.0.5",
+    "live-server": "^1.2.2",
     "postcss": "^8.5.2",
     "tailwindcss": "^3.4.17"
   },
   "dependencies": {
+    "flatpickr": "^4.6.13",
     "sweetalert2": "^11.17.2"
   }
 }
