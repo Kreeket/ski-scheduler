@@ -7,10 +7,10 @@
 export function getApiBaseUrl() {
     // Use development URL during development
     // Make sure this matches your backend server URL
-    return 'http://localhost:3000/api';
+   // return 'http://localhost:3000/api';
     
     // For production, uncomment this:
-    // return 'https://ski-scheduler.onrender.com/api';
+     return 'https://ski-scheduler.onrender.com/api';
 }
 
 /**
