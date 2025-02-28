@@ -1,6 +1,7 @@
 // script.js - Main entry point
 import * as app from './modules/app.js';
 import * as auth from './modules/api/auth.js';
+import * as exerciseManager from './modules/components/exercise-manager.js';
 
 // Initialize the application when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
@@ -24,6 +25,9 @@ document.addEventListener('DOMContentLoaded', () => {
         app.init()
             .then(() => {
                 console.log('Application initialized successfully');
+                
+                // Initialize exercise manager
+                exerciseManager.init();
             })
             .catch(error => {
                 console.error('Failed to initialize application:', error);

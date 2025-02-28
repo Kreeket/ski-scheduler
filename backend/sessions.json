@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "id": "b144a259-7b23-4ed3-9958-56d7134f18c0",
+    "group": "group1",
+    "title": "fff",
+    "date": "2025-02-28",
+    "startTime": "14:42",
+    "endTime": "15:42",
+    "location": "fff",
+    "leaders": "fff",
+    "notes": "ffff",
+    "exercises": [
+      "Teknikbana på snö",
+      "Hinderbana med grundfärdigheter barmark",
+      "Parövningar",
+      "Brevbäraren"
+    ]
+  }
+]

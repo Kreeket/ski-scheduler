@@ -7,12 +7,33 @@
 
 /* Modal content */
 .modal-content {
-    @apply relative p-5 border w-full max-w-md mx-2 md:mx-auto shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto;
+    @apply relative p-5 border w-full mx-2 shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto;
+}
+
+/* Modal sizes */
+.modal-content.max-w-sm {
+    max-width: 24rem;
+}
+
+.modal-content.max-w-md {
+    max-width: 28rem;
+}
+
+.modal-content.max-w-lg {
+    max-width: 32rem;
+}
+
+.modal-content.max-w-xl {
+    max-width: 36rem;
+}
+
+.modal-content.max-w-2xl {
+    max-width: 42rem;
 }
 
 /* Modal close button */
 .modal-close-btn {
-    @apply absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer;
+    @apply absolute top-2 right-2 text-gray-600 hover:text-gray-800 cursor-pointer p-1 rounded-full hover:bg-gray-100;
 }
 
 /* Modal title */
@@ -28,4 +49,93 @@
 /* Modal footer */
 .modal-footer {
     @apply flex justify-end space-x-2 mt-4 pt-2 border-t border-gray-100;
+}
+
+/* Modal animation */
+.modal-open {
+    animation: modalFadeIn 0.2s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Exercise selector styles */
+.exercise-selector .exercise-tag {
+    @apply inline-flex items-center bg-blue-100 text-blue-800 rounded-full px-3 py-1 text-sm;
+}
+
+.exercise-selector .exercise-dropdown {
+    @apply bg-white shadow-lg rounded-md border border-gray-200 max-h-60 overflow-y-auto;
+}
+
+.exercise-selector .exercise-dropdown-item {
+    @apply p-2 hover:bg-gray-100 cursor-pointer;
+}
+
+.exercise-selector .exercise-dropdown-item:focus {
+    @apply bg-gray-100 outline-none;
+}
+
+.exercise-selector .selected-exercises-container {
+    min-height: 80px;
+}
+
+/* Browse section styles */
+.browse-exercises-section {
+    @apply border border-gray-200 rounded-md;
+}
+
+.browse-tab {
+    @apply py-2 px-4 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 transition-colors;
+}
+
+.browse-tab-active {
+    @apply py-2 px-4 border-b-2 border-blue-500 text-blue-600 font-medium;
+}
+
+.exercise-list-item {
+    @apply transition-all duration-200;
+}
+
+.exercise-list-item:hover {
+    @apply shadow-sm;
+}
+
+/* Favorites button */
+.favorite-toggle-btn {
+    @apply p-1 rounded-full hover:bg-yellow-50 transition-colors;
+}
+
+/* Add exercise button */
+.add-exercise-btn {
+    @apply p-1 rounded-full hover:bg-blue-50 transition-colors;
+}
+
+/* Toggle details button */
+.toggle-details-btn {
+    @apply p-1 rounded-full hover:bg-gray-100 transition-colors;
+}
+
+/* Loading spinner */
+.loading-spinner {
+    @apply animate-spin h-5 w-5 text-gray-600;
+}
+
+/* Highlight effect for newly added exercise */
+@keyframes highlightPulse {
+    0% { background-color: rgba(0, 0, 0, 0); }
+    50% { background-color: rgba(209, 250, 229, 1); }
+    100% { background-color: rgba(0, 0, 0, 0); }
+}
+
+.exercise-highlight {
+    animation: highlightPulse 1s ease-in-out;
 }

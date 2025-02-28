@@ -186,128 +186,6 @@ export function showUpcomingSessions(sessions = []) {
 }
 
 /**
- * Create a session card for display
- * @param {Object} session - Session data
- * @returns {HTMLElement} - Session card element
- */
-function createSessionCard(session) {
-    const isExpanded = session.id === expandedSessionId;
-    
-    const card = document.createElement('div');
-    card.className = 'session-card mb-3';
-    card.dataset.sessionId = session.id;
-    card.dataset.sessionDate = session.date; // Store the session date
-    
-    let cardContent = `
-        <div class="cursor-pointer" data-session-id="${session.id}">
-            <div class="flex justify-between items-center">
-                <div class="font-semibold">${session.title || 'Untitled Session'}</div>
-                <div class="text-sm text-gray-600">${utils.formatTimeForDisplay(session.startTime)} - ${utils.formatTimeForDisplay(session.endTime)}</div>
-            </div>
-            ${session.location ? `<div class="text-sm text-gray-600 mt-1">📍 ${session.location}</div>` : ''}
-    `;
-    
-    if (isExpanded) {
-        cardContent += `
-            <div class="mt-3 pt-2 border-t">
-                ${session.leaders ? `<div class="text-sm mt-2"><span class="font-semibold">Leaders:</span> ${session.leaders}</div>` : ''}
-        `;
-        
-        // Exercise section
-        if (session.exercises && session.exercises.length > 0) {
-            cardContent += `
-                <div class="mt-3">
-                    <div class="font-semibold text-sm mb-1">Exercises:</div>
-                    <div class="flex flex-wrap gap-1 mt-1">
-            `;
-            
-            session.exercises.forEach(exerciseName => {
-                cardContent += `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${exerciseName}</span>`;
-            });
-            
-            cardContent += `
-                    </div>
-                </div>
-            `;
-        }
-        
-        if (session.notes) {
-            cardContent += `
-                <div class="mt-3">
-                    <div class="font-semibold text-sm">Notes:</div>
-                    <div class="text-sm text-gray-600 mt-1">${session.notes}</div>
-                </div>
-            `;
-        }
-        
-        // Action buttons
-        cardContent += `
-            <div class="flex justify-end mt-3 pt-2 border-t space-x-2">
-                <button class="edit-session-btn btn-base btn-secondary text-xs py-1 px-2">Edit</button>
-                <button class="delete-session-btn btn-base btn-danger text-xs py-1 px-2">Delete</button>
-            </div>
-        `;
-    }
-    
-    cardContent += `</div>`;
-    card.innerHTML = cardContent;
-    
-    // Add click event to toggle expansion
-    card.querySelector(`[data-session-id="${session.id}"]`).addEventListener('click', (e) => {
-        // Only toggle if not clicking on a button
-        if (!e.target.closest('button')) {
-            toggleSessionExpansion(session.id, session.date);
-        }
-    });
-    
-    // Add event listeners for buttons if expanded
-    if (isExpanded) {
-        card.querySelector('.edit-session-btn')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            editSession(session.id);
-        });
-        
-        card.querySelector('.delete-session-btn')?.addEventListener('click', (e) => {
-            e.stopPropagation();
-            deleteSession(session.id);
-        });
-    }
-    
-    return card;
-}
-
-/**
- * Toggle session card expansion
- * @param {string} sessionId - ID of the session to toggle
- * @param {string} sessionDate - Date of the session (YYYY-MM-DD)
- */
-function toggleSessionExpansion(sessionId, sessionDate) {
-    console.log(`Toggling session expansion: ${sessionId}`);
-    
-    // If already expanded, collapse it, otherwise expand it
-    if (expandedSessionId === sessionId) {
-        expandedSessionId = null;
-    } else {
-        expandedSessionId = sessionId;
-    }
-    
-    // Use the stored current date to maintain context
-    const dateToUse = currentSelectedDate || sessionDate;
-    
-    if (dateToUse) {
-        console.log(`Using date for refresh: ${dateToUse}`);
-        
-        // Get sessions directly from the calendar cache
-        const cachedSessions = calendar.getSessionsForDate(dateToUse);
-        
-        // Use cached data but honor our expanded/collapsed state
-        showSessionsForDate(dateToUse, cachedSessions);
-    } else {
-        console.error("Could not determine date for session refresh");
-    }
-}
-
-/**
  * Create a new session
  * @param {Date} date - Date for the new session
  */
@@ -476,5 +354,127 @@ export async function deleteSession(sessionId) {
         ui.showAlert("Failed to load session: " + error.message, "error");
     } finally {
         ui.hideLoadingIndicator();
+    }
+}
+
+/**
+ * Create a session card for display
+ * @param {Object} session - Session data
+ * @returns {HTMLElement} - Session card element
+ */
+function createSessionCard(session) {
+    const isExpanded = session.id === expandedSessionId;
+    
+    const card = document.createElement('div');
+    card.className = 'session-card mb-3';
+    card.dataset.sessionId = session.id;
+    card.dataset.sessionDate = session.date; // Store the session date
+    
+    let cardContent = `
+        <div class="cursor-pointer" data-session-id="${session.id}">
+            <div class="flex justify-between items-center">
+                <div class="font-semibold">${session.title || 'Untitled Session'}</div>
+                <div class="text-sm text-gray-600">${utils.formatTimeForDisplay(session.startTime)} - ${utils.formatTimeForDisplay(session.endTime)}</div>
+            </div>
+            ${session.location ? `<div class="text-sm text-gray-600 mt-1">📍 ${session.location}</div>` : ''}
+    `;
+    
+    if (isExpanded) {
+        cardContent += `
+            <div class="mt-3 pt-2 border-t">
+                ${session.leaders ? `<div class="text-sm mt-2"><span class="font-semibold">Leaders:</span> ${session.leaders}</div>` : ''}
+        `;
+        
+        // Exercise section
+        if (session.exercises && session.exercises.length > 0) {
+            cardContent += `
+                <div class="mt-3">
+                    <div class="font-semibold text-sm mb-1">Exercises:</div>
+                    <div class="flex flex-wrap gap-1 mt-1">
+            `;
+            
+            session.exercises.forEach(exerciseName => {
+                cardContent += `<span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${exerciseName}</span>`;
+            });
+            
+            cardContent += `
+                    </div>
+                </div>
+            `;
+        }
+        
+        if (session.notes) {
+            cardContent += `
+                <div class="mt-3">
+                    <div class="font-semibold text-sm">Notes:</div>
+                    <div class="text-sm text-gray-600 mt-1">${session.notes}</div>
+                </div>
+            `;
+        }
+        
+        // Action buttons
+        cardContent += `
+            <div class="flex justify-end mt-3 pt-2 border-t space-x-2">
+                <button class="edit-session-btn btn-base btn-secondary text-xs py-1 px-2">Edit</button>
+                <button class="delete-session-btn btn-base btn-danger text-xs py-1 px-2">Delete</button>
+            </div>
+        `;
+    }
+    
+    cardContent += `</div>`;
+    card.innerHTML = cardContent;
+    
+    // Add click event to toggle expansion
+    card.querySelector(`[data-session-id="${session.id}"]`).addEventListener('click', (e) => {
+        // Only toggle if not clicking on a button
+        if (!e.target.closest('button')) {
+            toggleSessionExpansion(session.id, session.date);
+        }
+    });
+    
+    // Add event listeners for buttons if expanded
+    if (isExpanded) {
+        card.querySelector('.edit-session-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editSession(session.id);
+        });
+        
+        card.querySelector('.delete-session-btn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteSession(session.id);
+        });
+    }
+    
+    return card;
+}
+
+/**
+ * Toggle session card expansion
+ * @param {string} sessionId - ID of the session to toggle
+ * @param {string} sessionDate - Date of the session (YYYY-MM-DD)
+ */
+function toggleSessionExpansion(sessionId, sessionDate) {
+    console.log(`Toggling session expansion: ${sessionId}`);
+    
+    // If already expanded, collapse it, otherwise expand it
+    if (expandedSessionId === sessionId) {
+        expandedSessionId = null;
+    } else {
+        expandedSessionId = sessionId;
+    }
+    
+    // Use the stored current date to maintain context
+    const dateToUse = currentSelectedDate || sessionDate;
+    
+    if (dateToUse) {
+        console.log(`Using date for refresh: ${dateToUse}`);
+        
+        // Get sessions directly from the calendar cache
+        const cachedSessions = calendar.getSessionsForDate(dateToUse);
+        
+        // Use cached data but honor our expanded/collapsed state
+        showSessionsForDate(dateToUse, cachedSessions);
+    } else {
+        console.error("Could not determine date for session refresh");
     }
 }
